@@ -63,6 +63,33 @@ class TestBoard(unittest.TestCase):
              B: ["start", "start", "start", "start"],},
             result)
 
+        # G swaps with a Y pawn, G then slides, bumping the Y pawn that was just swapped
+        board.setPawns({Y: ["board:1", "start", "start", "start"],
+                        G: ["start", "board:2", "start", "start"],
+                        R: ["start", "start", "start", "start"],
+                        B: ["start", "start", "start", "start"],})
+        result = board.swap(G, "board:2", "board:1")
+        self.assertEqual(
+            {Y: ["start", "start", "start", "start"],
+             G: ["start", "board:4", "start", "start"],
+             R: ["start", "start", "start", "start"],
+             B: ["start", "start", "start", "start"],},
+            result)
+
+        # G swaps with a Y pawn, Y then slides, bumping the G pawn that was just swapped
+        # This is a self destructive swap
+        board.setPawns({Y: ["board:1", "start", "start", "start"],
+                        G: ["start", "board:2", "start", "start"],
+                        R: ["start", "start", "start", "start"],
+                        B: ["start", "start", "start", "start"],})
+        result = board.swap(Y, "board:1", "board:2")
+        self.assertEqual(
+            {Y: ["start", "start", "start", "start"],
+             G: ["start", "board:4", "start", "start"],
+             R: ["start", "start", "start", "start"],
+             B: ["start", "start", "start", "start"],},
+            result)
+
     def test_sorry(self):
         board = Board()
         board.setPawns(SAMPLE_PAWN_SETUP)
@@ -468,6 +495,19 @@ class TestBoard(unittest.TestCase):
         self.assertEqual(
             {Y: ["start", "start", "start", "start"],
              G: ["board:59", "start", "start", "start"],
+             R: ["start", "start", "start", "start"],
+             B: ["start", "start", "start", "start"],},
+            result)
+
+        board = Board()
+        board.setPawns({Y: ["start", "start", "start", "start"],
+                        G: ["board:40", "start", "start", "start"],
+                        R: ["start", "start", "start", "start"],
+                        B: ["start", "start", "start", "start"],})
+        result = board.movePawn(G, "board:40", -1)
+        self.assertEqual(
+            {Y: ["start", "start", "start", "start"],
+             G: ["board:43", "start", "start", "start"],
              R: ["start", "start", "start", "start"],
              B: ["start", "start", "start", "start"],},
             result)

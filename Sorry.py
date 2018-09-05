@@ -1,6 +1,9 @@
-from random import shuffle
+import random
 import copy
 import itertools
+import sys
+import argparse
+import time
 
 Y = "Y"
 G = "G"
@@ -19,7 +22,8 @@ largeSlideStarts = {9:Y,24:G,39:R,54:B}
 
 class Board:
     def __init__(self):
-        self.deck = shuffle(self.initDeck())
+        self.deck = self.initDeck()
+        random.shuffle(self.deck)
         self.discardPile = []
         self.pawns = {Y: ["start", "start", "start", "start"],
                       G: ["start", "start", "start", "start"],
@@ -30,8 +34,9 @@ class Board:
         card = self.deck.pop()
         self.discardPile.append(card)
 
-        if len(deck) == 0:
-            self.deck = shuffle(self.discardPile)
+        if len(self.deck) == 0:
+            self.deck = self.discardPile
+            random.shuffle(self.deck)
             self.discardPile = []
 
         return card
@@ -79,8 +84,8 @@ class Board:
 
         return pawns
 
-    def applySlide(self, player, newSpot, pawns):
-        spotParts = newSpot.split(':')
+    def applySlide(self, player, currentSpot, pawns, originalSpot=None):
+        spotParts = currentSpot.split(':')
         newSpot = spotParts[0]
         newSpotNumber = int(spotParts[1])
 
@@ -89,7 +94,7 @@ class Board:
             while slide != 0:
                 newSpotNumber += 1
                 playerAtSpot = self.pawnAtLocation(pawns, newSpot+':'+str(newSpotNumber))
-                if playerAtSpot:
+                if playerAtSpot and originalSpot != newSpot+':'+str(newSpotNumber):
                     playersPawns = pawns[playerAtSpot]
                     playersPawns[playersPawns.index(newSpot+':'+str(newSpotNumber))] = 'start'
                 slide = slide - 1
@@ -135,14 +140,15 @@ class Board:
                 opponentPawns = pawns[playerAtSpot]
                 opponentPawns[opponentPawns.index(newSpot+':'+str(newSpotNumber))] = 'start'
 
-            newSpotNumber = self.applySlide(player, newSpot+':'+str(newSpotNumber), pawns)
+            newSpotNumber = self.applySlide(player, newSpot+':'+str(newSpotNumber), pawns, originalSpot=pawn)
             if newSpotNumber == None:
                 return None
 
         if (newSpot+':'+str(newSpotNumber)) in playerPawns:
             return None
 
-        playerPawns[playerPawns.index(pawn)] = newSpot+':'+str(newSpotNumber)
+        if pawn in playerPawns:
+            playerPawns[playerPawns.index(pawn)] = newSpot+':'+str(newSpotNumber)
         return pawns
 
     def swap(self, player, playerPawn, opponentPawn):
@@ -155,7 +161,10 @@ class Board:
         opponentPawns[opponentPawns.index(opponentPawn)] = playerPawn
 
         playersPawns[playersPawns.index(opponentPawn)] = 'board:'+str(self.applySlide(player, opponentPawn, pawns))
-        opponentPawns[opponentPawns.index(playerPawn)] = 'board:'+str(self.applySlide(opponent, playerPawn, pawns))
+
+        # It is possible the opponent pawn was bumped by the player pawn sliding
+        if playerPawn in opponentPawns:
+            opponentPawns[opponentPawns.index(playerPawn)] = 'board:'+str(self.applySlide(opponent, playerPawn, pawns))
 
         return pawns
 
@@ -193,15 +202,39 @@ class Board:
 class Game:
     def __init__(self):
         self.board = Board()
-        self.currentPlayer = Y
+        self.currentPlayerIndex = 0
         self.winner = None
+        self.strategies = {Y:'random',G:'random',R:'random',B:'random'}
+        self.totalTurns = 0
+        self.sorryCount = {Y:0,G:0,R:0,B:0}
 
     def setPawns(self, pawns):
         self.board.setPawns(pawns)
 
+    def chooseMove(self, possibleStates, strategy):
+        if not possibleStates:
+            return None
+
+        if strategy == 'random':
+            return random.choice(possibleStates)
+
     def playTurn(self):
         card = self.board.drawCard();
-        possibleGameStates = computePossibleGameStates(card, currentPlayer, board)
+        currentPlayer = PLAYERS[self.currentPlayerIndex]
+        possibleGameStates = self.computePossibleGameStates(card, currentPlayer)
+        move = self.chooseMove(possibleGameStates, self.strategies[currentPlayer])
+
+        if move:
+            self.setPawns(move[1])
+            if move[0] == 'sorry':
+                self.sorryCount[currentPlayer] += 1
+
+
+        if self.board.pawns[currentPlayer] == ["home","home","home","home"]:
+            self.winner = currentPlayer
+
+        self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
+        self.totalTurns += 1
 
     def computePossibleGameStates(self, card, player):
         possibleStates = []
@@ -209,12 +242,12 @@ class Game:
         numPawnsAtStart = self.board.numPawnsAtStart(player)
         opponentPawnsInPlay = self.board.opponentPawnsInPlay(player)
 
-        if ((card == 1 or card == 2) and numPawnsAtStart > 1):
-            possibleStates.append(self.board.startPawn(player))
+        if ((card == 1 or card == 2) and numPawnsAtStart > 0):
+            possibleStates.append((card, self.board.startPawn(player)))
         
         if (card == 'sorry' and numPawnsAtStart > 1):
             for opponentPawn in opponentPawnsInPlay:
-                possibleStates.append(self.board.sorry(player, opponentPawn))
+                possibleStates.append((card, self.board.sorry(player, opponentPawn)))
         
         if (pawnsInPlay > 0):
             if (card == 7 and pawnsInPlay > 1):
@@ -228,13 +261,13 @@ class Game:
                             tmpPawns = (tmpBoard.movePawn(player, pawnCombination[1], possibleSplit[1]))
 
                         if tmpPawns:
-                            possibleStates.append(tmpPawns)
+                            possibleStates.append((card, tmpPawns))
                         else:
                             tmpPawns = self.board.movePawn(player, pawnCombination[1], possibleSplit[1])
                             if (tmpPawns):
                                 tmpBoard = Board()
                                 tmpBoard.setPawns(tmpPawns)
-                                possibleStates.append(tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[0]))   
+                                possibleStates.append((card, tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[0]))  )
 
                         tmpPawns = self.board.movePawn(player, pawnCombination[0], possibleSplit[1])
                         if tmpPawns:
@@ -243,34 +276,59 @@ class Game:
                             tmpPawns = (tmpBoard.movePawn(player, pawnCombination[1], possibleSplit[0]))
 
                         if tmpPawns:
-                            possibleStates.append(tmpPawns)
+                            possibleStates.append((card,tmpPawns))
                         else:
                             tmpPawns = self.board.movePawn(player, pawnCombination[1], possibleSplit[0])
                             if (tmpPawns):
                                 tmpBoard = Board()
                                 tmpBoard.setPawns(tmpPawns)
-                                possibleStates.append(tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[1]))
+                                possibleStates.append((card, tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[1])))
  
             if (card == 11):
                 for playablePawn in self.board.pawnsInPlay(player, includeSafe=False):
                     for opponentPawn in opponentPawnsInPlay:
-                        possibleStates.append(self.board.swap(player, playablePawn, opponentPawn))   
+                        possibleStates.append((card, self.board.swap(player, playablePawn, opponentPawn)))
 
             if (card == 10):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append(self.board.movePawn(player, playablePawn, -1))  
+                    possibleStates.append((card, self.board.movePawn(player, playablePawn, -1)))
 
             if (card == 4):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append(self.board.movePawn(player, playablePawn, -4))
+                    possibleStates.append((card, self.board.movePawn(player, playablePawn, -4)))
             elif (isinstance(card, int)):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append(self.board.movePawn(player, playablePawn, card))
+                    possibleStates.append((card, self.board.movePawn(player, playablePawn, card)))
 
-        return [x for x in possibleStates if x is not None]
+        return [x for x in possibleStates if x[1] is not None]
 
 def main():
-    game = Game()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate.')
+
+    args = parser.parse_args()
+    count = copy.deepcopy(args.count)
+
+    totalTurns = 0
+    totalSorrys = 0
+
+    start = time.time()
+    while count:
+        game = Game()
+        while game.winner == None:
+            game.playTurn()
+        totalTurns += game.totalTurns
+        totalSorrys += sum(game.sorryCount.values())
+        if (args.count < 10):
+            print 'Game Over! {} wins in {} turns!'.format(game.winner, game.totalTurns) 
+            print game.board.pawns
+            print 'Sorry! There were {} total \'Sorry\'s\'. {}'.format(sum(game.sorryCount.values()), game.sorryCount)
+        count -= 1
+    end = time.time()
+    if args.count > 1:
+        print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count) 
+
+
 
 if __name__ == "__main__":
     main()
