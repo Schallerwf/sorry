@@ -4,6 +4,7 @@ import itertools
 import sys
 import argparse
 import time
+from collections import Counter
 
 Y = "Y"
 G = "G"
@@ -199,41 +200,88 @@ class Board:
                     return player
         return None
 
+class Strategy:
+    def __init__(self, startWeight=0, homeWeight=65, safeWeight=0):
+        self.startWeight = startWeight
+        self.homeWeight = homeWeight
+        self.safeWeight = safeWeight
+
+    def chooseMove(self, player, possibleStates):
+        ndx = 0
+        maxDistance = 0
+        chosenNdx = 0
+        for possibleState in possibleStates:
+            distances = self.totalDistances(player, possibleState)
+            playerDistance = distances[player]
+            if playerDistance > maxDistance:
+                chosenNdx = ndx
+                maxDistance = playerDistance
+            ndx += 1
+        return possibleStates[chosenNdx]
+    
+    def totalDistance(self, player, playersPawns):
+        result = 0
+        for pawn in playersPawns:
+            if pawn == 'start':
+                result += self.startWeight
+            elif pawn == 'home':
+                result += self.homeWeight
+            elif 'safe' in pawn:
+                result += self.safeWeight
+                result += int(pawn.split(':')[1])
+            else:
+                result += (int(pawn.split(':')[1]) - offsets[player]) % 60
+        return result
+
+    def totalDistances(self, player, pawns):
+        distances = {}
+        for player in PLAYERS:
+            playersPawns = pawns[1][player]
+            distances[player] = self.totalDistance(player, playersPawns)
+        return distances        
+
 class Game:
     def __init__(self):
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:'random',G:'random',R:'random',B:'random'}
+        self.strategies = {Y:Strategy(),G:'random',R:'random',B:'random'}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,R:0,B:0}
+        self.lostTurns  = {Y:0,G:0,R:0,B:0}
 
     def setPawns(self, pawns):
         self.board.setPawns(pawns)
 
-    def chooseMove(self, possibleStates, strategy):
+    def chooseMove(self, player, possibleStates):
+        strategy = self.strategies[player]
+
         if not possibleStates:
             return None
 
         if strategy == 'random':
             return random.choice(possibleStates)
 
+        return strategy.chooseMove(player, possibleStates)
+
     def playTurn(self):
         card = self.board.drawCard();
         currentPlayer = PLAYERS[self.currentPlayerIndex]
         possibleGameStates = self.computePossibleGameStates(card, currentPlayer)
-        move = self.chooseMove(possibleGameStates, self.strategies[currentPlayer])
+        move = self.chooseMove(currentPlayer, possibleGameStates)
 
         if move:
             self.setPawns(move[1])
             if move[0] == 'sorry':
                 self.sorryCount[currentPlayer] += 1
-
+        else:
+            self.lostTurns[currentPlayer] += 1
 
         if self.board.pawns[currentPlayer] == ["home","home","home","home"]:
             self.winner = currentPlayer
 
-        self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
+        if not move or (move and move[0] != 2):
+            self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
         self.totalTurns += 1
 
     def computePossibleGameStates(self, card, player):
@@ -304,13 +352,15 @@ class Game:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate.')
+    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate')
 
     args = parser.parse_args()
     count = copy.deepcopy(args.count)
 
     totalTurns = 0
     totalSorrys = 0
+    totalLostTurns = 0
+    wins = {Y:0,G:0,R:0,B:0}
 
     start = time.time()
     while count:
@@ -319,16 +369,19 @@ def main():
             game.playTurn()
         totalTurns += game.totalTurns
         totalSorrys += sum(game.sorryCount.values())
+        totalLostTurns += sum(game.lostTurns.values())
+        wins[game.winner] += 1
+
         if (args.count < 10):
-            print 'Game Over! {} wins in {} turns!'.format(game.winner, game.totalTurns) 
+            print 'Game Over! {} wins in {} ({}) turns!'.format(game.winner, game.totalTurns, game.totalTurns - sum(game.lostTurns.values())) 
             print game.board.pawns
             print 'Sorry! There were {} total \'Sorry\'s\'. {}'.format(sum(game.sorryCount.values()), game.sorryCount)
+            print '{} total turns were skipped because there was not a valid move. {}'.format(sum(game.lostTurns.values()), game.lostTurns)
         count -= 1
     end = time.time()
     if args.count > 1:
-        print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count) 
-
-
+        print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} ({4}) turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count, totalLostTurns/args.count)
+        print 'Wins: ' + str(wins)
 
 if __name__ == "__main__":
     main()

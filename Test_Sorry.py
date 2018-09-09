@@ -608,9 +608,9 @@ class TestGame(unittest.TestCase):
         result = game.computePossibleGameStates(7, Y) 
         expectedMutations = [
                           # No split cases
-                          {Y: ["board:11", "board:59", "safe:2", "start"],}, # A
-                          {Y: ["board:4", "safe:4", "safe:2", "start"],},    # B
-                          {Y: ["board:4", "board:59", "home", "start"],},    # C
+                          {Y: ["board:11", "board:59", "safe:2", "start"],}, # A7
+                          {Y: ["board:4", "safe:4", "safe:2", "start"],},    # B7
+                          {Y: ["board:4", "board:59", "home", "start"],},    # C7
 
                           # Split between AxB
                           {Y: ["board:5", "safe:3", "safe:2", "start"],},    # A1,B6
@@ -634,7 +634,7 @@ class TestGame(unittest.TestCase):
                           {Y: ["board:4", "board:1", "home", "start"],},     # B2,C5
                           {Y: ["board:4", "board:2", "home", "start"],},     # B3,C4
                           {Y: ["board:4", "safe:1", "safe:5", "start"],},    # B4,C3
-                          {Y: ["board:4", "safe:2", "safe:4", "start"],}, # B5,C2
+                          {Y: ["board:4", "safe:2", "safe:4", "start"],},    # B5,C2
                           # Invalid move                                     # B6,C1
                           ]
         for item in expectedMutations:
