@@ -29,7 +29,25 @@ class Board:
         self.pawns = {Y: ["start", "start", "start", "start"],
                       G: ["start", "start", "start", "start"],
                       R: ["start", "start", "start", "start"],
-                      B: ["start", "start", "start", "start"],}  
+                      B: ["start", "start", "start", "start"],}
+
+    def toArray(self):
+        result = []
+        for player in PLAYERS:
+            playersPawns = self.pawns[player]
+            for pawn in playersPawns:
+                result.append(str(self.pawnToInt(pawn)))
+        return result
+
+    def pawnToInt(self, pawn):
+        if 'board' in pawn:
+            return int(pawn.split(':')[1]) + 1
+        if 'safe' in pawn:
+            return int(pawn.split(':')[1]) + 60
+        if 'start' == pawn:
+            return 0
+        if 'home' == pawn: 
+            return 66
 
     def drawCard(self):
         card = self.deck.pop()
@@ -201,23 +219,33 @@ class Board:
         return None
 
 class Strategy:
-    def __init__(self, startWeight=0, homeWeight=65, safeWeight=0):
+    def __init__(self, player, startWeight=0, homeWeight=65, safeWeight=0, maximize=True):
         self.startWeight = startWeight
         self.homeWeight = homeWeight
         self.safeWeight = safeWeight
+        self.player = player
+        self.maximize = maximize
 
-    def chooseMove(self, player, possibleStates):
+    def chooseMove(self, possibleStates):
         ndx = 0
         maxDistance = 0
-        chosenNdx = 0
+        minDistance = 200
+        chosenMaxNdx = 0
+        chosenMinNdx = 0
         for possibleState in possibleStates:
-            distances = self.totalDistances(player, possibleState)
-            playerDistance = distances[player]
+            distances = self.totalDistances(possibleState)
+            playerDistance = distances[self.player]
             if playerDistance > maxDistance:
-                chosenNdx = ndx
+                chosenMaxNdx = ndx
                 maxDistance = playerDistance
+            if playerDistance < minDistance:
+                chosenMinNdx = ndx
+                minDistance = playerDistance
             ndx += 1
-        return possibleStates[chosenNdx]
+        if self.maximize:
+            return possibleStates[chosenMaxNdx]
+        else:
+            return possibleStates[chosenMinNdx]
     
     def totalDistance(self, player, playersPawns):
         result = 0
@@ -233,7 +261,7 @@ class Strategy:
                 result += (int(pawn.split(':')[1]) - offsets[player]) % 60
         return result
 
-    def totalDistances(self, player, pawns):
+    def totalDistances(self, pawns):
         distances = {}
         for player in PLAYERS:
             playersPawns = pawns[1][player]
@@ -245,10 +273,14 @@ class Game:
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:Strategy(),G:'random',R:'random',B:'random'}
+        self.strategies = {Y:Strategy("Y"),G:Strategy("G"),R:Strategy("R"),B:Strategy("B")}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,R:0,B:0}
         self.lostTurns  = {Y:0,G:0,R:0,B:0}
+        self.states = []
+
+    def winnerToInt(self):
+        return PLAYERS.index(self.winner)
 
     def setPawns(self, pawns):
         self.board.setPawns(pawns)
@@ -262,7 +294,7 @@ class Game:
         if strategy == 'random':
             return random.choice(possibleStates)
 
-        return strategy.chooseMove(player, possibleStates)
+        return strategy.chooseMove(possibleStates)
 
     def playTurn(self):
         card = self.board.drawCard();
@@ -274,6 +306,7 @@ class Game:
             self.setPawns(move[1])
             if move[0] == 'sorry':
                 self.sorryCount[currentPlayer] += 1
+            self.states.append(",".join(self.board.toArray()))
         else:
             self.lostTurns[currentPlayer] += 1
 
@@ -352,7 +385,8 @@ class Game:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate')
+    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate. defaults to 1')
+    parser.add_argument('--outputData', action='store_true', help='output game data as a csv')
 
     args = parser.parse_args()
     count = copy.deepcopy(args.count)
@@ -372,14 +406,18 @@ def main():
         totalLostTurns += sum(game.lostTurns.values())
         wins[game.winner] += 1
 
-        if (args.count < 10):
+        if (args.count < 10 and not args.outputData):
             print 'Game Over! {} wins in {} ({}) turns!'.format(game.winner, game.totalTurns, game.totalTurns - sum(game.lostTurns.values())) 
             print game.board.pawns
             print 'Sorry! There were {} total \'Sorry\'s\'. {}'.format(sum(game.sorryCount.values()), game.sorryCount)
             print '{} total turns were skipped because there was not a valid move. {}'.format(sum(game.lostTurns.values()), game.lostTurns)
         count -= 1
+
+        if args.outputData:
+            for state in game.states:
+                print state + ',' + str(game.winnerToInt())
     end = time.time()
-    if args.count > 1:
+    if args.count > 1 and not args.outputData:
         print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} ({4}) turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count, totalLostTurns/args.count)
         print 'Wins: ' + str(wins)
 

@@ -473,6 +473,7 @@ class TestBoard(unittest.TestCase):
              B: ["start", "start", "start", "start"],},
             result)
 
+        # Wrap around backward
         board = Board()
         board.setPawns({Y: ["start", "start", "start", "start"],
                         G: ["board:0", "start", "start", "start"],
@@ -486,6 +487,7 @@ class TestBoard(unittest.TestCase):
              B: ["start", "start", "start", "start"],},
             result)
 
+        # Wrap around backward
         board = Board()
         board.setPawns({Y: ["start", "start", "start", "start"],
                         G: ["board:3", "start", "start", "start"],
@@ -499,6 +501,7 @@ class TestBoard(unittest.TestCase):
              B: ["start", "start", "start", "start"],},
             result)
 
+        # Wrap around backward
         board = Board()
         board.setPawns({Y: ["start", "start", "start", "start"],
                         G: ["board:40", "start", "start", "start"],
@@ -620,7 +623,6 @@ class TestGame(unittest.TestCase):
                           {Y: ["board:9", "board:1", "safe:2", "start"],},   # A5,B2
                           {Y: ["board:10", "board:0", "safe:2", "start"],},  # A6,B1
                           
-
                           # Split between AxC
                           {Y: ["board:5", "board:59", "home", "start"],},    # A1,C6
                           {Y: ["board:6", "board:59", "home", "start"],},    # A2,C5
