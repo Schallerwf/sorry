@@ -117,6 +117,7 @@ td .yellow {
   right: 0;
   background: gold;
   border: 1px solid black;
+  text-align:center;
 }
 td .green {
   position: absolute;
@@ -126,6 +127,7 @@ td .green {
   right: 0;
   background: green;
   border: 1px solid black;
+  text-align:center;
 }
 td .red {
   position: absolute;
@@ -135,6 +137,7 @@ td .red {
   right: 0;
   background: red;
   border: 1px solid black;
+  text-align:center;
 }
 td .blue {
   position: absolute;
@@ -144,6 +147,7 @@ td .blue {
   right: 0;
   background: blue;
   border: 1px solid black;
+  text-align:center;
 }
 td .yellowSafeSpace {
   position: absolute;
@@ -239,7 +243,6 @@ function updateMetadata() {
     player = players[i];
     color = playerToColor[player];
     numPawnsInPlay = pawns[player].length;
-    errors += "<strong>"+color+"</strong><br />"
     if (numPawnsInPlay > 4) {
       errors += "Player " + color + " has more than 4 pawns in play ("+numPawnsInPlay+")<br />";
     } else if (numPawnsInPlay < 4) {
@@ -262,10 +265,10 @@ function selectSafeZone(clickedId) {
 
   if (elem.innerHTML != "") {
     elem.innerHTML = "";
-    removePawn(player, "s" + clickedId.slice(-1));
+    removePawn(player, "safe:" + clickedId.slice(-1));
   } else {
     elem.innerHTML = "<div class=\""+elem.className.replace("SafeSpace","")+"Piece\"></div>";
-    addPawn(player, "s" + clickedId.slice(-1));
+    addPawn(player, "safe:" + clickedId.slice(-1));
   }
 }
 
@@ -283,13 +286,13 @@ function selectPlace(clickedId) {
 
   if (nextState != "emptySpace") {
     elem.innerHTML = "<div class=\""+nextColor+"Piece\"></div>";
-    addPawn(player, clickedId);
+    addPawn(player, "board:"+clickedId);
   } else {
     elem.innerHTML = "";
   }
 
   if (currentState != "emptySpace") {
-    removePawn(prevPlayer, clickedId);
+    removePawn(prevPlayer, "board:"+clickedId);
   }
 }
 
@@ -492,7 +495,7 @@ function selectStartOrHome(clickedId) {
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
-    <td><div class="red" onclick="select(this.id)" id="rh">0</div></td>
+    <td><div class="blue" onclick="select(this.id)" id="bh">0</div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="24"></div></td>
   </tr>
@@ -510,13 +513,13 @@ function selectStartOrHome(clickedId) {
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs5"></div></td>
+    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs5"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="25"></div></td>
   </tr>
   <tr>
     <td><div class="emptySpace" onclick="select(this.id)" id="49"></div></td>
-    <td><div class="blue" onclick="select(this.id)" id="bs">0</div></td>
+    <td><div class="red" onclick="select(this.id)" id="rs">0</div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
@@ -528,7 +531,7 @@ function selectStartOrHome(clickedId) {
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs4"></div></td>
+    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs4"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="26"></div></td>
   </tr>
@@ -546,25 +549,25 @@ function selectStartOrHome(clickedId) {
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs3"></div></td>
+    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs3"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="27"></div></td>
   </tr>
   <tr>
     <td><div class="emptySpace" onclick="select(this.id)" id="47"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs1"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs2"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs3"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs4"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs5"></div></td>
-    <td><div class="blue" onclick="select(this.id)" id="bh">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
+    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs1"></div></td>
     <td><div class="redSafeSpace" onclick="select(this.id)" id="rs2"></div></td>
+    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs3"></div></td>
+    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs4"></div></td>
+    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs5"></div></td>
+    <td><div class="red" onclick="select(this.id)" id="rh">0</div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="empty"></div></td>
+    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs2"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="28"></div></td>
   </tr>
@@ -580,9 +583,9 @@ function selectStartOrHome(clickedId) {
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="empty"></div></td>
-    <td><div class="red" onclick="select(this.id)" id="rs">0</div></td>
+    <td><div class="blue" onclick="select(this.id)" id="bs">0</div></td>
     <td><div class="empty"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs1"></div></td>
+    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs1"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="29"></div></td>
   </tr>
