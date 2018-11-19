@@ -273,7 +273,7 @@ class Game:
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:Strategy("Y"),G:Strategy("G"),R:Strategy("R"),B:Strategy("B")}
+        self.strategies = {Y:Strategy('Y'),G:'random',R:'random',B:'random'}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,R:0,B:0}
         self.lostTurns  = {Y:0,G:0,R:0,B:0}
@@ -383,10 +383,26 @@ class Game:
 
         return [x for x in possibleStates if x[1] is not None]
 
+def capitalize_keys(d, toLower=False):
+    result = {}
+    for key, value in d.items():
+        upper_key = key.lower() if toLower else key.upper()
+        result[upper_key] = value
+    return result
+
+def analyzeBoard(pawns, player, card):
+    pawns = capitalize_keys(pawns)
+    card = int(card) if card.isdigit() else card
+    print pawns
+    game = Game()
+    game.setPawns(pawns)
+    possibleGameStates = game.computePossibleGameStates(card, player)
+    return possibleGameStates
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--count', default=1, type=int, help='number of sorry games to simulate. defaults to 1')
-    parser.add_argument('--outputData', action='store_true', help='output game data as a csv')
+    parser.add_argument('--count', '-c', default=1, type=int, help='number of sorry games to simulate. defaults to 1')
+    parser.add_argument('--outputData', '-o', action='store_true', help='output game data as a csv')
 
     args = parser.parse_args()
     count = copy.deepcopy(args.count)
