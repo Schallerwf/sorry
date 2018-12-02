@@ -11,7 +11,7 @@ def view():
         pawns = args.get('pawns')
         card = args.get('card')
         player = args.get('player')
-        return str(analyzeBoard(pawns, player, card))
+        return json.dumps(analyzeBoard(pawns, player, card))
     else:
         return render_template('setup_board.html')
 

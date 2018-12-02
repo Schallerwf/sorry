@@ -12,24 +12,31 @@ R = "R"
 B = "B"
 PLAYERS = [Y,G,R,B]
 OPPONENTS = {Y:[G,R,B], G:[Y,R,B], R:[Y,G,B], B:[Y,G,R]}
-cards = [1,2,3,4,5,7,8,10,11,12,'sorry']
-possibleSevenSplits = [[1,6],[2,5],[3,4]]
+CARDS = [1,2,3,4,5,7,8,10,11,12,'sorry']
+POSSIBLE_SEVEN_SPLITS = [[1,6],[2,5],[3,4]]
 
-offsets = {Y:0,G:15,R:30,B:45}
-safeZoneEntrance = 2
-start = 4
-smallSlideStarts = {1:Y,16:G,31:R,46:B}
-largeSlideStarts = {9:Y,24:G,39:R,54:B}
+PLAYER_OFFSETS = {Y:0,G:15,R:30,B:45}
+SAFE_ZONE_ENTRANCE = 2
+START = 4
+SMALL_SLIDE_STARTS = {1:Y,16:G,31:R,46:B}
+LARGE_SLIDE_STARTS = {9:Y,24:G,39:R,54:B}
 
 class Board:
     def __init__(self):
         self.deck = self.initDeck()
-        random.shuffle(self.deck)
         self.discardPile = []
         self.pawns = {Y: ["start", "start", "start", "start"],
                       G: ["start", "start", "start", "start"],
                       R: ["start", "start", "start", "start"],
                       B: ["start", "start", "start", "start"],}
+
+    def initDeck(self):
+        deck = [1]
+        for card in CARDS:
+            for x in range(4):
+                deck.append(card)
+        random.shuffle(deck)
+        return deck
 
     def toArray(self):
         result = []
@@ -63,23 +70,16 @@ class Board:
     def setPawns(self, pawns):
         self.pawns = pawns
 
-    def initDeck(self):
-        deck = [1]
-        for card in cards:
-            for x in range(4):
-                deck.append(card)
-        return deck
-
     def getStartSpot(self, player):
-        return 'board:' + str(start + offsets[player])
+        return 'board:' + str(START + PLAYER_OFFSETS[player])
 
     def getSafeSpot(self, player):
-        return safeZoneEntrance + offsets[player]
+        return SAFE_ZONE_ENTRANCE + PLAYER_OFFSETS[player]
 
     def isSpotSlide(self, player, spotNumber):
-        if spotNumber in smallSlideStarts and smallSlideStarts[spotNumber] != player:
+        if spotNumber in SMALL_SLIDE_STARTS and SMALL_SLIDE_STARTS[spotNumber] != player:
             return 3
-        if spotNumber in largeSlideStarts and largeSlideStarts[spotNumber] != player:
+        if spotNumber in LARGE_SLIDE_STARTS and LARGE_SLIDE_STARTS[spotNumber] != player:
             return 4
         return 0
 
@@ -258,13 +258,13 @@ class Strategy:
                 result += self.safeWeight
                 result += int(pawn.split(':')[1])
             else:
-                result += (int(pawn.split(':')[1]) - offsets[player]) % 60
+                result += (int(pawn.split(':')[1]) - PLAYER_OFFSETS[player]) % 60
         return result
 
     def totalDistances(self, pawns):
         distances = {}
         for player in PLAYERS:
-            playersPawns = pawns[1][player]
+            playersPawns = pawns[player]
             distances[player] = self.totalDistance(player, playersPawns)
         return distances        
 
@@ -303,8 +303,8 @@ class Game:
         move = self.chooseMove(currentPlayer, possibleGameStates)
 
         if move:
-            self.setPawns(move[1])
-            if move[0] == 'sorry':
+            self.setPawns(move)
+            if card == 'sorry':
                 self.sorryCount[currentPlayer] += 1
             self.states.append(",".join(self.board.toArray()))
         else:
@@ -313,7 +313,7 @@ class Game:
         if self.board.pawns[currentPlayer] == ["home","home","home","home"]:
             self.winner = currentPlayer
 
-        if not move or (move and move[0] != 2):
+        if not move or (move and card != 2):
             self.currentPlayerIndex = (self.currentPlayerIndex + 1) % 4
         self.totalTurns += 1
 
@@ -324,17 +324,17 @@ class Game:
         opponentPawnsInPlay = self.board.opponentPawnsInPlay(player)
 
         if ((card == 1 or card == 2) and numPawnsAtStart > 0):
-            possibleStates.append((card, self.board.startPawn(player)))
+            possibleStates.append(self.board.startPawn(player))
         
         if (card == 'sorry' and numPawnsAtStart > 1):
             for opponentPawn in opponentPawnsInPlay:
-                possibleStates.append((card, self.board.sorry(player, opponentPawn)))
+                possibleStates.append(self.board.sorry(player, opponentPawn))
         
         if (pawnsInPlay > 0):
             if (card == 7 and pawnsInPlay > 1):
                 possibleCombinations = itertools.combinations(pawnsInPlay, 2)
                 for pawnCombination in possibleCombinations:
-                    for possibleSplit in possibleSevenSplits:
+                    for possibleSplit in POSSIBLE_SEVEN_SPLITS:
                         tmpPawns = self.board.movePawn(player, pawnCombination[0], possibleSplit[0])
                         if tmpPawns:
                             tmpBoard = Board()
@@ -342,13 +342,13 @@ class Game:
                             tmpPawns = (tmpBoard.movePawn(player, pawnCombination[1], possibleSplit[1]))
 
                         if tmpPawns:
-                            possibleStates.append((card, tmpPawns))
+                            possibleStates.append(tmpPawns)
                         else:
                             tmpPawns = self.board.movePawn(player, pawnCombination[1], possibleSplit[1])
                             if (tmpPawns):
                                 tmpBoard = Board()
                                 tmpBoard.setPawns(tmpPawns)
-                                possibleStates.append((card, tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[0]))  )
+                                possibleStates.append(tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[0]))
 
                         tmpPawns = self.board.movePawn(player, pawnCombination[0], possibleSplit[1])
                         if tmpPawns:
@@ -357,31 +357,31 @@ class Game:
                             tmpPawns = (tmpBoard.movePawn(player, pawnCombination[1], possibleSplit[0]))
 
                         if tmpPawns:
-                            possibleStates.append((card,tmpPawns))
+                            possibleStates.append(tmpPawns)
                         else:
                             tmpPawns = self.board.movePawn(player, pawnCombination[1], possibleSplit[0])
                             if (tmpPawns):
                                 tmpBoard = Board()
                                 tmpBoard.setPawns(tmpPawns)
-                                possibleStates.append((card, tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[1])))
+                                possibleStates.append(tmpBoard.movePawn(player, pawnCombination[0], possibleSplit[1]))
  
             if (card == 11):
                 for playablePawn in self.board.pawnsInPlay(player, includeSafe=False):
                     for opponentPawn in opponentPawnsInPlay:
-                        possibleStates.append((card, self.board.swap(player, playablePawn, opponentPawn)))
+                        possibleStates.append(self.board.swap(player, playablePawn, opponentPawn))
 
             if (card == 10):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append((card, self.board.movePawn(player, playablePawn, -1)))
+                    possibleStates.append(self.board.movePawn(player, playablePawn, -1))
 
             if (card == 4):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append((card, self.board.movePawn(player, playablePawn, -4)))
+                    possibleStates.append(self.board.movePawn(player, playablePawn, -4))
             elif (isinstance(card, int)):
                 for playablePawn in pawnsInPlay:
-                    possibleStates.append((card, self.board.movePawn(player, playablePawn, card)))
+                    possibleStates.append(self.board.movePawn(player, playablePawn, card))
 
-        return [x for x in possibleStates if x[1] is not None]
+        return [x for x in possibleStates if x is not None]
 
 def capitalize_keys(d, toLower=False):
     result = {}
