@@ -1,6 +1,14 @@
 <html>
 <head>
 <style>
+div .resultBoard {
+  display:inline-block;
+}
+
+div .resultAnalysis {
+  display:inline-block;
+}
+
 table {
   width: 500px;
 }
@@ -191,40 +199,38 @@ td .empty {
   text-align:center;
 }
 .shrink{
--webkit-transform:scale(0.5);
--moz-transform:scale(0.5);
--ms-transform:scale(0.5);
-transform:scale(0.5);
+-webkit-transform:scale(0.75);
+-moz-transform:scale(0.75);
+-ms-transform:scale(0.75);
+transform:scale(0.75);
 }
 </style>
 <script>
 var board = `<table class='shrink'>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}0'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}1'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}2'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}3'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}4'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}5'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}6'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}7'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}8'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}9'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}10'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}11'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}12'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}13'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}14'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}15'></div></td>
+    <td><div class='emptySpace'  id='{}0'></div></td>
+    <td><div class='emptySpace'  id='{}1'></div></td>
+    <td><div class='emptySpace'  id='{}2'></div></td>
+    <td><div class='emptySpace'  id='{}3'></div></td>
+    <td><div class='emptySpace'  id='{}4'></div></td>
+    <td><div class='emptySpace'  id='{}5'></div></td>
+    <td><div class='emptySpace'  id='{}6'></div></td>
+    <td><div class='emptySpace'  id='{}7'></div></td>
+    <td><div class='emptySpace'  id='{}8'></div></td>
+    <td><div class='emptySpace'  id='{}9'></div></td>
+    <td><div class='emptySpace'  id='{}10'></div></td>
+    <td><div class='emptySpace'  id='{}11'></div></td>
+    <td><div class='emptySpace'  id='{}12'></div></td>
+    <td><div class='emptySpace'  id='{}13'></div></td>
+    <td><div class='emptySpace'  id='{}14'></div></td>
+    <td><div class='emptySpace'  id='{}15'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}59'></div></td>
+    <td><div class='emptySpace'  id='{}59'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace' onclick='select(this.id)' id='{}ys1'></div></td>
+    <td><div class='yellowSafeSpace'  id='{}ys1'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellow' onclick='select(this.id)' id='{}ys'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellow'  id='{}ys'>0</div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -233,32 +239,32 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}16'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='emptySpace'  id='{}16'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}58'></div></td>
+    <td><div class='emptySpace'  id='{}58'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace' onclick='select(this.id)' id='{}ys2'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellowSafeSpace'  id='{}ys2'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='green' onclick='select(this.id)' id='{}gh'>0</div></td>
-    <td><div class='greenSafeSpace' onclick='select(this.id)' id='{}gs5'></div></td>
-    <td><div class='greenSafeSpace' onclick='select(this.id)' id='{}gs4'></div></td>
-    <td><div class='greenSafeSpace' onclick='select(this.id)' id='{}gs3'></div></td>
-    <td><div class='greenSafeSpace' onclick='select(this.id)' id='{}gs2'></div></td>
-    <td><div class='greenSafeSpace' onclick='select(this.id)' id='{}gs1'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}17'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='green'  id='{}gh'>0</div></td>
+    <td><div class='greenSafeSpace'  id='{}gs5'></div></td>
+    <td><div class='greenSafeSpace'  id='{}gs4'></div></td>
+    <td><div class='greenSafeSpace'  id='{}gs3'></div></td>
+    <td><div class='greenSafeSpace'  id='{}gs2'></div></td>
+    <td><div class='greenSafeSpace'  id='{}gs1'></div></td>
+    <td><div class='emptySpace'  id='{}17'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}57'></div></td>
+    <td><div class='emptySpace'  id='{}57'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace' onclick='select(this.id)' id='{}ys3'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellowSafeSpace'  id='{}ys3'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -269,14 +275,14 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}18'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='emptySpace'  id='{}18'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}56'></div></td>
+    <td><div class='emptySpace'  id='{}56'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace' onclick='select(this.id)' id='{}ys4'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellowSafeSpace'  id='{}ys4'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -286,15 +292,15 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='green' onclick='select(this.id)' id='{}gs'>0</div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}19'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='green'  id='{}gs'>0</div></td>
+    <td><div class='emptySpace'  id='{}19'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}15'></div></td>
+    <td><div class='emptySpace'  id='{}15'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace' onclick='select(this.id)' id='{}ys5'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellowSafeSpace'  id='{}ys5'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -305,14 +311,14 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}20'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='emptySpace'  id='{}20'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}54'></div></td>
+    <td><div class='emptySpace'  id='{}54'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='yellow' onclick='select(this.id)' id='{}yh'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
+    <td><div class='yellow'  id='{}yh'>0</div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -323,10 +329,12 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}21'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='empty'></div></td>
+    <td><div class='emptySpace'  id='{}21'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}53'></div></td>
+    <td><div class='emptySpace'  id='{}53'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -341,10 +349,10 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}22'></div></td>
+    <td><div class='emptySpace'  id='{}22'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}52'></div></td>
+    <td><div class='emptySpace'  id='{}52'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -359,10 +367,10 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}23'></div></td>
+    <td><div class='emptySpace'  id='{}23'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}51'></div></td>
+    <td><div class='emptySpace'  id='{}51'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -375,12 +383,12 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blue' onclick='select(this.id)' id='{}bh'>0</div></td>
+    <td><div class='blue'  id='{}bh'>0</div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}24'></div></td>
+    <td><div class='emptySpace'  id='{}24'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}50'></div></td>
+    <td><div class='emptySpace'  id='{}50'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -393,13 +401,13 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace' onclick='select(this.id)' id='{}bs5'></div></td>
+    <td><div class='blueSafeSpace'  id='{}bs5'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}25'></div></td>
+    <td><div class='emptySpace'  id='{}25'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}49'></div></td>
-    <td><div class='red' onclick='select(this.id)' id='{}rs'>0</div></td>
+    <td><div class='emptySpace'  id='{}49'></div></td>
+    <td><div class='red'  id='{}rs'>0</div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -411,12 +419,12 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace' onclick='select(this.id)' id='{}bs4'></div></td>
+    <td><div class='blueSafeSpace'  id='{}bs4'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}26'></div></td>
+    <td><div class='emptySpace'  id='{}26'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}48'></div></td>
+    <td><div class='emptySpace'  id='{}48'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -429,30 +437,30 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace' onclick='select(this.id)' id='{}bs3'></div></td>
+    <td><div class='blueSafeSpace'  id='{}bs3'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}27'></div></td>
+    <td><div class='emptySpace'  id='{}27'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}47'></div></td>
-    <td><div class='redSafeSpace' onclick='select(this.id)' id='{}rs1'></div></td>
-    <td><div class='redSafeSpace' onclick='select(this.id)' id='{}rs2'></div></td>
-    <td><div class='redSafeSpace' onclick='select(this.id)' id='{}rs3'></div></td>
-    <td><div class='redSafeSpace' onclick='select(this.id)' id='{}rs4'></div></td>
-    <td><div class='redSafeSpace' onclick='select(this.id)' id='{}rs5'></div></td>
-    <td><div class='red' onclick='select(this.id)' id='{}rh'>0</div></td>
+    <td><div class='emptySpace'  id='{}47'></div></td>
+    <td><div class='redSafeSpace'  id='{}rs1'></div></td>
+    <td><div class='redSafeSpace'  id='{}rs2'></div></td>
+    <td><div class='redSafeSpace'  id='{}rs3'></div></td>
+    <td><div class='redSafeSpace'  id='{}rs4'></div></td>
+    <td><div class='redSafeSpace'  id='{}rs5'></div></td>
+    <td><div class='red'  id='{}rh'>0</div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace' onclick='select(this.id)' id='{}bs2'></div></td>
+    <td><div class='blueSafeSpace'  id='{}bs2'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}28'></div></td>
+    <td><div class='emptySpace'  id='{}28'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}46'></div></td>
+    <td><div class='emptySpace'  id='{}46'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
@@ -463,29 +471,29 @@ var board = `<table class='shrink'>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blue' onclick='select(this.id)' id='{}bs'>0</div></td>
+    <td><div class='blue'  id='{}bs'>0</div></td>
     <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace' onclick='select(this.id)' id='{}bs1'></div></td>
+    <td><div class='blueSafeSpace'  id='{}bs1'></div></td>
     <td><div class='empty'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}29'></div></td>
+    <td><div class='emptySpace'  id='{}29'></div></td>
   </tr>
   <tr>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}45'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}44'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}43'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}42'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}41'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}40'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}39'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}38'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}37'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}36'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}35'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}34'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}33'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}32'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}31'></div></td>
-    <td><div class='emptySpace' onclick='select(this.id)' id='{}30'></div></td>
+    <td><div class='emptySpace'  id='{}45'></div></td>
+    <td><div class='emptySpace'  id='{}44'></div></td>
+    <td><div class='emptySpace'  id='{}43'></div></td>
+    <td><div class='emptySpace'  id='{}42'></div></td>
+    <td><div class='emptySpace'  id='{}41'></div></td>
+    <td><div class='emptySpace'  id='{}40'></div></td>
+    <td><div class='emptySpace'  id='{}39'></div></td>
+    <td><div class='emptySpace'  id='{}38'></div></td>
+    <td><div class='emptySpace'  id='{}37'></div></td>
+    <td><div class='emptySpace'  id='{}36'></div></td>
+    <td><div class='emptySpace'  id='{}35'></div></td>
+    <td><div class='emptySpace'  id='{}34'></div></td>
+    <td><div class='emptySpace'  id='{}33'></div></td>
+    <td><div class='emptySpace'  id='{}32'></div></td>
+    <td><div class='emptySpace'  id='{}31'></div></td>
+    <td><div class='emptySpace'  id='{}30'></div></td>
   </tr>
 <table>`
 
@@ -621,7 +629,7 @@ function selectStartOrHome(clickedId) {
 
 function analyzeBoard() {
   var currentCardSelect = document.getElementById("currentCardSelect");
-  var currentCard = currentCardSelect.options[currentCardSelect.selectedIndex].value;
+  var currentCard = currentCardSelect.options[currentCardSelect.selectedIndex].value.toLowerCase();
   var currentPlayerSelect = document.getElementById("currentPlayerSelect");
   var currentPlayer = currentPlayerSelect.options[currentPlayerSelect.selectedIndex].value;
   var xhr = new XMLHttpRequest();
@@ -652,18 +660,52 @@ function updateAnalysisResults(serverResults) {
     document.getElementById("results").innerHTML = "There are "+numPossibleMoves+" possible moves";
   }
 
-  possibleMovesHtml = "<table>"
+  var possibleMovesHtml = "";
 
   for (var i = 0; i < numPossibleMoves; i++) {
-    possibleMovesHtml += "<tr><td>"+createBoard(possibleMoves[i], i)+"</td><td>analysis</td></tr>";
+    possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(possibleMoves[i], i)+"</div>";
   }
 
-  possibleMovesHtml += "</table>"
+  possibleMovesHtml += "";
   document.getElementById("possibleStates").innerHTML = possibleMovesHtml;
 
+  for (var i = 0; i < numPossibleMoves; i++) {
+    var possibleMove = possibleMoves[i];
+    for (var j = 0; j < players.length; j++) {
+      var player = players[j].toUpperCase();
+      var playerMoves = possibleMove[player];
+      for (var k = 0; k < playerMoves.length; k++) {
+        setPawnOnBoard(i, playerMoves[k], player);
+      }
+    }
+  }
 }
 
-function createBoard(moves, id) {
+function setPawnOnBoard(boardId, pawnPosition, player) {
+  var playerLower = player.toLowerCase();
+  var color = playerToColor[playerLower];
+  if (pawnPosition.startsWith("board")) {
+    elem = document.getElementById(boardId + "_" + pawnPosition.split(":")[1]);
+    elem.className = color + "Space";
+    elem.innerHTML = "<div class=\""+color+"Piece\"></div>";
+  } else if (pawnPosition.startsWith("safe")) {
+    elem = document.getElementById(boardId + "_" + playerLower + "s" + pawnPosition.split(":")[1]);
+    elem.innerHTML = "<div class=\""+elem.className.replace("SafeSpace","")+"Piece\"></div>";
+  } else if (pawnPosition == "home") {
+    elem = document.getElementById(boardId + "_" + playerLower + "h");
+    currentValue = parseInt(elem.innerHTML);
+    newValue = (currentValue + 1);
+    elem.innerHTML = newValue;
+  } else {
+    elem = document.getElementById(boardId + "_" + playerLower + "s");
+    currentValue = parseInt(elem.innerHTML);
+    newValue = (currentValue + 1);
+    elem.innerHTML = newValue;
+  }
+}
+
+
+function createEmptyBoard(moves, id) {
   return board.split("{}").join(id+"_");
 }
 
@@ -765,7 +807,7 @@ function createBoard(moves, id) {
     <td><div class="emptySpace" onclick="select(this.id)" id="19"></div></td>
   </tr>
   <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="15"></div></td>
+    <td><div class="emptySpace" onclick="select(this.id)" id="55"></div></td>
     <td><div class="empty"></div></td>
     <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys5"></div></td>
     <td><div class="empty"></div></td>

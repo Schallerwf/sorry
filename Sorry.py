@@ -393,7 +393,6 @@ def capitalize_keys(d, toLower=False):
 def analyzeBoard(pawns, player, card):
     pawns = capitalize_keys(pawns)
     card = int(card) if card.isdigit() else card
-    print pawns
     game = Game()
     game.setPawns(pawns)
     possibleGameStates = game.computePossibleGameStates(card, player)
