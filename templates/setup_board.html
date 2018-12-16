@@ -10,7 +10,7 @@ div .resultAnalysis {
   display:inline-block;
 }
 
-table {
+.board {
   width: 500px;
 }
 td {
@@ -205,9 +205,41 @@ td .empty {
 -ms-transform:scale(0.75);
 transform:scale(0.75);
 }
+
+.divTable{
+  display: table;
+  width: 100%;
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  border: 1px solid #999999;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+}
+
+
 </style>
 <script>
-var board = `<table class='shrink'>
+var board = `<table class='board shrink'>
   <tr>
     <td><div class='emptySpace'  id='{}0'></div></td>
     <td><div class='emptySpace'  id='{}1'></div></td>
@@ -496,7 +528,7 @@ var board = `<table class='shrink'>
     <td><div class='emptySpace'  id='{}31'></div></td>
     <td><div class='emptySpace'  id='{}30'></div></td>
   </tr>
-<table>`
+</table>`
 
 var players = ["y","g","b","r"];
 var colorToPlayer = {yellow: "y",
@@ -650,8 +682,10 @@ function analyzeBoard() {
 }
 
 function updateAnalysisResults(serverResults) {
-  possibleMoves = JSON.parse(serverResults.response);
-  numPossibleMoves = possibleMoves.length;
+  var jsonResponse = JSON.parse(serverResults.response);
+  var possibleMoves = jsonResponse["gameStates"];
+  var inputGameState = jsonResponse["inputState"];
+  var numPossibleMoves = possibleMoves.length;
 
   if (numPossibleMoves == 0) {
     document.getElementById("results").innerHTML = "There are zero valid moves";
@@ -664,14 +698,16 @@ function updateAnalysisResults(serverResults) {
   var possibleMovesHtml = "";
 
   for (var i = 0; i < numPossibleMoves; i++) {
-    possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(possibleMoves[i], i)+"</div>";
+    possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(i)+"</div>";
+    possibleMovesHtml += createAnalysisTable(possibleMoves[i], inputGameState);
+    possibleMovesHtml += "<hr />";
   }
 
   possibleMovesHtml += "";
   document.getElementById("possibleStates").innerHTML = possibleMovesHtml;
 
   for (var i = 0; i < numPossibleMoves; i++) {
-    var possibleMove = possibleMoves[i];
+    var possibleMove = possibleMoves[i]["gameState"];
     for (var j = 0; j < players.length; j++) {
       var player = players[j].toUpperCase();
       var playerMoves = possibleMove[player];
@@ -680,6 +716,41 @@ function updateAnalysisResults(serverResults) {
       }
     }
   }
+}
+
+function createAnalysisTable(possibleMove, inputState) {
+  var startingDistances = inputState["distances"];
+  var distances = possibleMove["distances"];
+  var result = "<div class='divTable' style='width: 20px;border: 1px solid #000;' >";
+  result += "<div class='divTableBody'>";
+  result += "<div class='divTableRow'>";
+  result += "<div class='divTableCell'>&nbsp;</div>";
+  result += "<div class='divTableCell'>Yellow</div>";
+  result += "<div class='divTableCell'>Green</div>";
+  result += "<div class='divTableCell'>Blue</div>";
+  result += "<div class='divTableCell'>Red</div>";
+  result += "</div>";
+  result += "<div class='divTableRow'>";
+  result += "<div class='divTableCell'>distances</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "Y")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "G")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "B")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "R")+"</div>";
+  result += "</div>";
+  result += "</div>";
+  result += "</div>";
+  return result;
+}
+
+function distanceEntry(newDistances, startingDistances, player) {
+  var delta = newDistances[player] - startingDistances[player];
+  var deltaString = "";
+  if (delta > 0) {
+    deltaString = "(+"+delta+")";
+  } else if (delta < 0) {
+    deltaString = "(-"+delta+")";
+  }
+  return newDistances[player] + deltaString;
 }
 
 function setPawnOnBoard(boardId, pawnPosition, player) {
@@ -706,7 +777,7 @@ function setPawnOnBoard(boardId, pawnPosition, player) {
 }
 
 
-function createEmptyBoard(moves, id) {
+function createEmptyBoard(id) {
   return board.split("{}").join(id+"_");
 }
 
@@ -716,7 +787,7 @@ function createEmptyBoard(moves, id) {
   <center>
   <div id="setup">
     <h1>Ultimate Sorry</h1>
-  <table>
+  <table class="board">
   <tr>
     <td><div class="emptySpace" onclick="select(this.id)" id="0"></div></td>
     <td><div class="emptySpace" onclick="select(this.id)" id="1"></div></td>
@@ -1009,13 +1080,12 @@ function createEmptyBoard(moves, id) {
 
   <h3>Click the spaces above to setup the board.</h3>
   <div>
-    Whose turn is it?: <select id="currentPlayerSelect">
-      <option value="Y">Yellow</option>
-      <option value="G">Green</option>
-      <option value="B">Blue</option>
-      <option value="R">Red</option>
-  </select> <br />
-    Select the card at play: <select id="currentCardSelect">
+    It is <select id="currentPlayerSelect">
+      <option value="Y">Yellow's</option>
+      <option value="G">Green's</option>
+      <option value="B">Blue's</option>
+      <option value="R">Red's</option>
+  </select> turn who just drew a <select id="currentCardSelect">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -1027,7 +1097,7 @@ function createEmptyBoard(moves, id) {
       <option value="4">10</option>
       <option value="4">11</option>
       <option value="Sorry">Sorry</option>
-  </select>
+  </select> card. <br />
   </div>
   <div id="metadata" style="display:none;"></div>
   <div id="errors" style="color:red;"></div>

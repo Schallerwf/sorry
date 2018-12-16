@@ -218,6 +218,27 @@ class Board:
                     return player
         return None
 
+    def totalDistance(self, player, playersPawns, weights={}):
+        result = 0
+        for pawn in playersPawns:
+            if pawn == 'start':
+                result += weights.get('start', 0)
+            elif pawn == 'home':
+                result += weights.get('home', 65)
+            elif 'safe' in pawn:
+                result += weights.get('safe', 0)
+                result += int(pawn.split(':')[1])
+            else:
+                result += (int(pawn.split(':')[1]) - PLAYER_OFFSETS[player]) % 60
+        return result
+
+    def totalDistances(self, pawns):
+        distances = {}
+        for player in PLAYERS:
+            playersPawns = pawns[player]
+            distances[player] = self.totalDistance(player, playersPawns)
+        return distances   
+
 class Strategy:
     def __init__(self, player, startWeight=0, homeWeight=65, safeWeight=0, maximize=True):
         self.startWeight = startWeight
@@ -396,7 +417,16 @@ def analyzeBoard(pawns, player, card):
     game = Game()
     game.setPawns(pawns)
     possibleGameStates = game.computePossibleGameStates(card, player)
-    return possibleGameStates
+
+    gameStates = []
+    for possibleGameState in possibleGameStates:
+        gameStates.append({'gameState': possibleGameState,
+                            'distances': game.board.totalDistances(possibleGameState)})
+
+    results = {'inputState': {'distances': game.board.totalDistances(pawns)},
+              'gameStates': gameStates}
+
+    return results
 
 def main():
     parser = argparse.ArgumentParser()
