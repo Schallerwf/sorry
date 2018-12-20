@@ -7,7 +7,17 @@ div .resultBoard {
 }
 
 div .resultAnalysis {
+  padding-bottom: 100px;
   display:inline-block;
+}
+
+div .resultLabel {
+  vertical-align: top; 
+  display:inline-block;
+}
+
+div .resultContainer {
+  width: 100%;
 }
 
 .board {
@@ -683,7 +693,7 @@ function analyzeBoard() {
 
 function updateAnalysisResults(serverResults) {
   var jsonResponse = JSON.parse(serverResults.response);
-  var possibleMoves = jsonResponse["gameStates"];
+  var possibleMoves = jsonResponse["possibleGameStates"];
   var inputGameState = jsonResponse["inputState"];
   var numPossibleMoves = possibleMoves.length;
 
@@ -697,13 +707,17 @@ function updateAnalysisResults(serverResults) {
 
   var possibleMovesHtml = "";
 
-  for (var i = 0; i < numPossibleMoves; i++) {
-    possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(i)+"</div>";
-    possibleMovesHtml += createAnalysisTable(possibleMoves[i], inputGameState);
-    possibleMovesHtml += "<hr />";
+  if (numPossibleMoves > 0) {
+    for (var i = 0; i < numPossibleMoves; i++) {
+      possibleMovesHtml += "<hr />";
+      possibleMovesHtml += "<div class=\"resultContainer\">";
+      possibleMovesHtml += "<div class=\"resultLabel\"><h3>Option "+(i+1)+"</h3></div>"
+      possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(i)+"</div>";
+      possibleMovesHtml += "<div class=\"resultAnalysis\">";
+      possibleMovesHtml += createAnalysisTable(possibleMoves[i], inputGameState);
+      possibleMovesHtml += "</div></div>";
+    }
   }
-
-  possibleMovesHtml += "";
   document.getElementById("possibleStates").innerHTML = possibleMovesHtml;
 
   for (var i = 0; i < numPossibleMoves; i++) {
@@ -721,7 +735,7 @@ function updateAnalysisResults(serverResults) {
 function createAnalysisTable(possibleMove, inputState) {
   var startingDistances = inputState["distances"];
   var distances = possibleMove["distances"];
-  var result = "<div class='divTable' style='width: 20px;border: 1px solid #000;' >";
+  var result = "<div class='divTable' style='width: 30px;border: 1px solid #000;' >";
   result += "<div class='divTableBody'>";
   result += "<div class='divTableRow'>";
   result += "<div class='divTableCell'>&nbsp;</div>";
@@ -748,7 +762,7 @@ function distanceEntry(newDistances, startingDistances, player) {
   if (delta > 0) {
     deltaString = "(+"+delta+")";
   } else if (delta < 0) {
-    deltaString = "(-"+delta+")";
+    deltaString = "("+delta+")";
   }
   return newDistances[player] + deltaString;
 }
@@ -1085,7 +1099,7 @@ function createEmptyBoard(id) {
       <option value="G">Green's</option>
       <option value="B">Blue's</option>
       <option value="R">Red's</option>
-  </select> turn who just drew a <select id="currentCardSelect">
+  </select> turn playing the <select id="currentCardSelect">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>

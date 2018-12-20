@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 app = Flask(__name__)
 
-from Sorry import analyzeBoard
 import json
+from sorry import analyzeBoard
 
 @app.route('/', methods=['GET', 'POST'])
 def view():

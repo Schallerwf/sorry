@@ -1,5 +1,7 @@
 import unittest
-from Sorry import *
+from sorry import *
+from sorry_constants import *
+
 
 SAMPLE_PAWN_SETUP = {Y: ["board:4", "board:59", "start", "start"],
                      G: ["start", "board:30", "safe:1", "start"],
