@@ -1,1105 +1,315 @@
 <html>
 <head>
+  <title>Ultimate Sorry</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-<style>
-div .resultBoard {
-  display:inline-block;
-}
-
-div .resultAnalysis {
-  padding-bottom: 100px;
-  display:inline-block;
-}
-
-div .resultLabel {
-  vertical-align: top; 
-  display:inline-block;
-}
-
-div .resultContainer {
-  width: 100%;
-}
-
-.board {
-  width: 500px;
-}
-td {
-  position: relative;
-}
-td:after {
-  content: '';
-  display: block;
-  margin-top: 100%;
-}
-td .emptySpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-}
-td .yellowSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-}
-td .greenSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-}
-td .blueSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-}
-td .redSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid black;
-  text-align: center;
-  vertical-align: middle;
-}
-
-td .yellowPiece {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: gold;
-  border: 1px solid black;
-  margin: 5px;
-}
-td .greenPiece {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: green;
-  border: 1px solid black;
-  margin: 5px;
-}
-td .bluePiece {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: blue;
-  border: 1px solid black;
-  margin: 5px;
-}
-td .redPiece {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: red;
-  border: 1px solid black;
-  margin: 5px;
-}
-
-td .yellow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: gold;
-  border: 1px solid black;
-  text-align:center;
-}
-td .green {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: green;
-  border: 1px solid black;
-  text-align:center;
-}
-td .red {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: red;
-  border: 1px solid black;
-  text-align:center;
-}
-td .blue {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: blue;
-  border: 1px solid black;
-  text-align:center;
-}
-td .yellowSafeSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: 1px solid gold;
-}
-td .greenSafeSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: 1px solid green;
-}
-td .redSafeSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: 1px solid red;
-}
-td .blueSafeSpace {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border: 1px solid blue;
-}
-td .empty {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  text-align:center;
-}
-.shrink{
--webkit-transform:scale(0.75);
--moz-transform:scale(0.75);
--ms-transform:scale(0.75);
-transform:scale(0.75);
-}
-
-.divTable{
-  display: table;
-  width: 100%;
-}
-.divTableRow {
-  display: table-row;
-}
-.divTableHeading {
-  background-color: #EEE;
-  display: table-header-group;
-}
-.divTableCell, .divTableHead {
-  border: 1px solid #999999;
-  display: table-cell;
-  padding: 3px 10px;
-}
-.divTableHeading {
-  background-color: #EEE;
-  display: table-header-group;
-  font-weight: bold;
-}
-.divTableFoot {
-  background-color: #EEE;
-  display: table-footer-group;
-  font-weight: bold;
-}
-.divTableBody {
-  display: table-row-group;
-}
-
-
-</style>
-<script>
-var board = `<table class='board shrink'>
-  <tr>
-    <td><div class='emptySpace'  id='{}0'></div></td>
-    <td><div class='emptySpace'  id='{}1'></div></td>
-    <td><div class='emptySpace'  id='{}2'></div></td>
-    <td><div class='emptySpace'  id='{}3'></div></td>
-    <td><div class='emptySpace'  id='{}4'></div></td>
-    <td><div class='emptySpace'  id='{}5'></div></td>
-    <td><div class='emptySpace'  id='{}6'></div></td>
-    <td><div class='emptySpace'  id='{}7'></div></td>
-    <td><div class='emptySpace'  id='{}8'></div></td>
-    <td><div class='emptySpace'  id='{}9'></div></td>
-    <td><div class='emptySpace'  id='{}10'></div></td>
-    <td><div class='emptySpace'  id='{}11'></div></td>
-    <td><div class='emptySpace'  id='{}12'></div></td>
-    <td><div class='emptySpace'  id='{}13'></div></td>
-    <td><div class='emptySpace'  id='{}14'></div></td>
-    <td><div class='emptySpace'  id='{}15'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}59'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace'  id='{}ys1'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellow'  id='{}ys'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}16'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}58'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace'  id='{}ys2'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='green'  id='{}gh'>0</div></td>
-    <td><div class='greenSafeSpace'  id='{}gs5'></div></td>
-    <td><div class='greenSafeSpace'  id='{}gs4'></div></td>
-    <td><div class='greenSafeSpace'  id='{}gs3'></div></td>
-    <td><div class='greenSafeSpace'  id='{}gs2'></div></td>
-    <td><div class='greenSafeSpace'  id='{}gs1'></div></td>
-    <td><div class='emptySpace'  id='{}17'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}57'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace'  id='{}ys3'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}18'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}56'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace'  id='{}ys4'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='green'  id='{}gs'>0</div></td>
-    <td><div class='emptySpace'  id='{}19'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}15'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellowSafeSpace'  id='{}ys5'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}20'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}54'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='yellow'  id='{}yh'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}21'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}53'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'>S</div></td>
-    <td><div class='empty'>O</div></td>
-    <td><div class='empty'>R</div></td>
-    <td><div class='empty'>R</div></td>
-    <td><div class='empty'>Y</div></td>
-    <td><div class='empty'>!</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}22'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}52'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}23'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}51'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blue'  id='{}bh'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}24'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}50'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace'  id='{}bs5'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}25'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}49'></div></td>
-    <td><div class='red'  id='{}rs'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace'  id='{}bs4'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}26'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}48'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace'  id='{}bs3'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}27'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}47'></div></td>
-    <td><div class='redSafeSpace'  id='{}rs1'></div></td>
-    <td><div class='redSafeSpace'  id='{}rs2'></div></td>
-    <td><div class='redSafeSpace'  id='{}rs3'></div></td>
-    <td><div class='redSafeSpace'  id='{}rs4'></div></td>
-    <td><div class='redSafeSpace'  id='{}rs5'></div></td>
-    <td><div class='red'  id='{}rh'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace'  id='{}bs2'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}28'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}46'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blue'  id='{}bs'>0</div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='blueSafeSpace'  id='{}bs1'></div></td>
-    <td><div class='empty'></div></td>
-    <td><div class='emptySpace'  id='{}29'></div></td>
-  </tr>
-  <tr>
-    <td><div class='emptySpace'  id='{}45'></div></td>
-    <td><div class='emptySpace'  id='{}44'></div></td>
-    <td><div class='emptySpace'  id='{}43'></div></td>
-    <td><div class='emptySpace'  id='{}42'></div></td>
-    <td><div class='emptySpace'  id='{}41'></div></td>
-    <td><div class='emptySpace'  id='{}40'></div></td>
-    <td><div class='emptySpace'  id='{}39'></div></td>
-    <td><div class='emptySpace'  id='{}38'></div></td>
-    <td><div class='emptySpace'  id='{}37'></div></td>
-    <td><div class='emptySpace'  id='{}36'></div></td>
-    <td><div class='emptySpace'  id='{}35'></div></td>
-    <td><div class='emptySpace'  id='{}34'></div></td>
-    <td><div class='emptySpace'  id='{}33'></div></td>
-    <td><div class='emptySpace'  id='{}32'></div></td>
-    <td><div class='emptySpace'  id='{}31'></div></td>
-    <td><div class='emptySpace'  id='{}30'></div></td>
-  </tr>
-</table>`
-
-var players = ["y","g","b","r"];
-var colorToPlayer = {yellow: "y",
-                     green:  "g",
-                     blue:   "b",
-                     red:    "r"};
-var playerToColor = {y: "yellow",
-                     g: "green",
-                     b: "blue",
-                     r: "red"};
-var invalidSpaces = {y: [16,31,46,24,39,54],
-                     g: [1,9,31,46,39,54],
-                     b: [1,9,16,46,24,54],
-                     r: [1,9,16,31,24,39]};
-var pawns = {y:[],
-             g:[],
-             b:[],
-             r:[]};
-var placeStates = ["emptySpace", "yellowSpace", "greenSpace", "blueSpace", "redSpace"]
-
-function removePawn(player, spot) {
-  pawns[player] = pawns[player].filter(a => a !== spot)
-}
-
-function addPawn(player, spot) {
-  pawns[player].push(spot);
-}
-
-function select(clickedId) {
-  if (clickedId.startsWith("y") ||
-      clickedId.startsWith("g") ||
-      clickedId.startsWith("r") ||
-      clickedId.startsWith("b")) {
-    if (clickedId.length > 2) {
-      selectSafeZone(clickedId);
-    } else {
-      selectStartOrHome(clickedId);
-    }
-  } else {
-    selectPlace(clickedId);
-  }
-  updateMetadata();
-}
-
-function updateMetadata() {
-  document.getElementById("metadata").innerHTML = JSON.stringify(pawns);
-
-  errors = "";
-  for (var i = 0; i < players.length; i++) {
-    player = players[i];
-    color = playerToColor[player];
-    numPawnsInPlay = pawns[player].length;
-    if (numPawnsInPlay > 4) {
-      errors += "Player " + color + " has more than 4 pawns in play ("+numPawnsInPlay+")<br />";
-    } else if (numPawnsInPlay < 4) {
-       errors += "Player " + color + " has less than 4 pawns in play ("+numPawnsInPlay+")<br />";
-    }
-
-    for (var n = 0; n < pawns[player].length; n++) {
-      if (invalidSpaces[player].includes(parseInt(pawns[player][n]))) {
-        errors += "Player " + color + " has a pawn on the start of a slide.<br />";
-      }
-    }
-
-  }
-  document.getElementById("errors").innerHTML = errors;
-
-  if (errors == "") {
-    document.getElementById("go").innerHTML = "<button type=\"button\" onclick=\"analyzeBoard()\">Analyze</button>";
-  } else {
-    document.getElementById("go").innerHTML = "<button type=\"button\" disabled>Analyze</button>";
-  }
-}
-
-function selectSafeZone(clickedId) {
-  player = clickedId.charAt(0);
-  elem = document.getElementById(clickedId);
-
-  if (elem.innerHTML != "") {
-    elem.innerHTML = "";
-    removePawn(player, "safe:" + clickedId.slice(-1));
-  } else {
-    elem.innerHTML = "<div class=\""+elem.className.replace("SafeSpace","")+"Piece\"></div>";
-    addPawn(player, "safe:" + clickedId.slice(-1));
-  }
-}
-
-function selectPlace(clickedId) {
-  elem = document.getElementById(clickedId);
-  currentState = elem.className;
-  currentColor = currentState.replace("Space","");
-  currentNdx = placeStates.indexOf(currentState);
-  nextNdx = (currentNdx + 1) % 5;
-  nextState = placeStates[nextNdx];
-  elem.className = nextState;
-  nextColor = nextState.replace("Space","");
-  player = colorToPlayer[nextColor];
-  prevPlayer = colorToPlayer[currentColor];
-
-  if (nextState != "emptySpace") {
-    elem.innerHTML = "<div class=\""+nextColor+"Piece\"></div>";
-    addPawn(player, "board:"+clickedId);
-  } else {
-    elem.innerHTML = "";
-  }
-
-  if (currentState != "emptySpace") {
-    removePawn(prevPlayer, "board:"+clickedId);
-  }
-}
-
-function selectStartOrHome(clickedId) {
-  elem = document.getElementById(clickedId);
-  currentValue = parseInt(elem.innerHTML);
-  newValue = (currentValue + 1) % 5;
-  elem.innerHTML = newValue;
-  player = clickedId.charAt(0);
-
-  if (clickedId.endsWith("h")) {
-    removePawn(player, 'home');
-    for (var i = 0; i < newValue; i++) {
-      addPawn(player, 'home')
-    }
-  } else {
-    removePawn(player, 'start');
-    for (var i = 0; i < newValue; i++) {
-      addPawn(player, 'start')
-    }
-  }
-}
-
-function analyzeBoard() {
-  var currentCardSelect = document.getElementById("currentCardSelect");
-  var currentCard = currentCardSelect.options[currentCardSelect.selectedIndex].value.toLowerCase();
-  var currentPlayerSelect = document.getElementById("currentPlayerSelect");
-  var currentPlayer = currentPlayerSelect.options[currentPlayerSelect.selectedIndex].value;
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(this);
-            updateAnalysisResults(this)
-        }
-    };
-  xhr.open("POST", "/", true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(JSON.stringify({
-      pawns: pawns,
-      card: currentCard,
-      player: currentPlayer
-  }));
-}
-
-function updateAnalysisResults(serverResults) {
-  var jsonResponse = JSON.parse(serverResults.response);
-  var possibleMoves = jsonResponse["possibleGameStates"];
-  var inputGameState = jsonResponse["inputState"];
-  var numPossibleMoves = possibleMoves.length;
-
-  if (numPossibleMoves == 0) {
-    document.getElementById("results").innerHTML = "There are zero valid moves";
-  } else if (numPossibleMoves == 1) {
-    document.getElementById("results").innerHTML = "There is only 1 valid move";
-  } else {
-    document.getElementById("results").innerHTML = "There are "+numPossibleMoves+" possible moves";
-  }
-
-  var possibleMovesHtml = "";
-
-  if (numPossibleMoves > 0) {
-    for (var i = 0; i < numPossibleMoves; i++) {
-      possibleMovesHtml += "<hr />";
-      possibleMovesHtml += "<div class=\"resultContainer\">";
-      possibleMovesHtml += "<div class=\"resultLabel\"><h3>Option "+(i+1)+"</h3></div>"
-      possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(i)+"</div>";
-      possibleMovesHtml += "<div class=\"resultAnalysis\">";
-      possibleMovesHtml += createAnalysisTable(possibleMoves[i], inputGameState);
-      possibleMovesHtml += "</div></div>";
-    }
-  }
-  document.getElementById("possibleStates").innerHTML = possibleMovesHtml;
-
-  for (var i = 0; i < numPossibleMoves; i++) {
-    var possibleMove = possibleMoves[i]["gameState"];
-    for (var j = 0; j < players.length; j++) {
-      var player = players[j].toUpperCase();
-      var playerMoves = possibleMove[player];
-      for (var k = 0; k < playerMoves.length; k++) {
-        setPawnOnBoard(i, playerMoves[k], player);
-      }
-    }
-  }
-}
-
-function createAnalysisTable(possibleMove, inputState) {
-  var startingDistances = inputState["distances"];
-  var distances = possibleMove["distances"];
-  var result = "<div class='divTable' style='width: 30px;border: 1px solid #000;' >";
-  result += "<div class='divTableBody'>";
-  result += "<div class='divTableRow'>";
-  result += "<div class='divTableCell'>&nbsp;</div>";
-  result += "<div class='divTableCell'>Yellow</div>";
-  result += "<div class='divTableCell'>Green</div>";
-  result += "<div class='divTableCell'>Blue</div>";
-  result += "<div class='divTableCell'>Red</div>";
-  result += "</div>";
-  result += "<div class='divTableRow'>";
-  result += "<div class='divTableCell'>distances</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "Y")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "G")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "B")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "R")+"</div>";
-  result += "</div>";
-  result += "</div>";
-  result += "</div>";
-  return result;
-}
-
-function distanceEntry(newDistances, startingDistances, player) {
-  var delta = newDistances[player] - startingDistances[player];
-  var deltaString = "";
-  if (delta > 0) {
-    deltaString = "(+"+delta+")";
-  } else if (delta < 0) {
-    deltaString = "("+delta+")";
-  }
-  return newDistances[player] + deltaString;
-}
-
-function setPawnOnBoard(boardId, pawnPosition, player) {
-  var playerLower = player.toLowerCase();
-  var color = playerToColor[playerLower];
-  if (pawnPosition.startsWith("board")) {
-    elem = document.getElementById(boardId + "_" + pawnPosition.split(":")[1]);
-    elem.className = color + "Space";
-    elem.innerHTML = "<div class=\""+color+"Piece\"></div>";
-  } else if (pawnPosition.startsWith("safe")) {
-    elem = document.getElementById(boardId + "_" + playerLower + "s" + pawnPosition.split(":")[1]);
-    elem.innerHTML = "<div class=\""+elem.className.replace("SafeSpace","")+"Piece\"></div>";
-  } else if (pawnPosition == "home") {
-    elem = document.getElementById(boardId + "_" + playerLower + "h");
-    currentValue = parseInt(elem.innerHTML);
-    newValue = (currentValue + 1);
-    elem.innerHTML = newValue;
-  } else {
-    elem = document.getElementById(boardId + "_" + playerLower + "s");
-    currentValue = parseInt(elem.innerHTML);
-    newValue = (currentValue + 1);
-    elem.innerHTML = newValue;
-  }
-}
-
-
-function createEmptyBoard(id) {
-  return board.split("{}").join(id+"_");
-}
-
-</script>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/sorry.css') }}">
+  <script src="{{ url_for('static',filename='js/sorry.js') }}"></script>
 </head>
 <body>
   <center>
   <div id="setup">
     <h1>Ultimate Sorry</h1>
-  <table class="board">
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="0"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="1"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="2"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="3"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="4"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="5"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="6"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="7"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="8"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="9"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="10"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="11"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="12"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="13"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="14"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="15"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="59"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys1"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellow" onclick="select(this.id)" id="ys">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="16"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="58"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys2"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="green" onclick="select(this.id)" id="gh">0</div></td>
-    <td><div class="greenSafeSpace" onclick="select(this.id)" id="gs5"></div></td>
-    <td><div class="greenSafeSpace" onclick="select(this.id)" id="gs4"></div></td>
-    <td><div class="greenSafeSpace" onclick="select(this.id)" id="gs3"></div></td>
-    <td><div class="greenSafeSpace" onclick="select(this.id)" id="gs2"></div></td>
-    <td><div class="greenSafeSpace" onclick="select(this.id)" id="gs1"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="17"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="57"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys3"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="18"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="56"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys4"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="green" onclick="select(this.id)" id="gs">0</div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="19"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="55"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellowSafeSpace" onclick="select(this.id)" id="ys5"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="20"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="54"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="yellow" onclick="select(this.id)" id="yh">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="21"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="53"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty">S</div></td>
-    <td><div class="empty">O</div></td>
-    <td><div class="empty">R</div></td>
-    <td><div class="empty">R</div></td>
-    <td><div class="empty">Y</div></td>
-    <td><div class="empty">!</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="22"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="52"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="23"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="51"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blue" onclick="select(this.id)" id="bh">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="24"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="50"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs5"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="25"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="49"></div></td>
-    <td><div class="red" onclick="select(this.id)" id="rs">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs4"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="26"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="48"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs3"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="27"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="47"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs1"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs2"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs3"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs4"></div></td>
-    <td><div class="redSafeSpace" onclick="select(this.id)" id="rs5"></div></td>
-    <td><div class="red" onclick="select(this.id)" id="rh">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs2"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="28"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="46"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blue" onclick="select(this.id)" id="bs">0</div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="blueSafeSpace" onclick="select(this.id)" id="bs1"></div></td>
-    <td><div class="empty"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="29"></div></td>
-  </tr>
-  <tr>
-    <td><div class="emptySpace" onclick="select(this.id)" id="45"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="44"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="43"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="42"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="41"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="40"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="39"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="38"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="37"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="36"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="35"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="34"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="33"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="32"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="31"></div></td>
-    <td><div class="emptySpace" onclick="select(this.id)" id="30"></div></td>
-  </tr>
-<table>
-
-  <h3>Click the spaces above to setup the board.</h3>
-  <div>
-    It is <select id="currentPlayerSelect">
+    <a href="#">How this Works</a><br />
+    <a href="#">About Sorry</a><br />
+    <a href="#">About this Website</a><br /><br />
+    <table class="board">
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="0"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="1">></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="2">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="3">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="4">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="5"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="6"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="7"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="8"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="9">></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="10">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="11">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="12">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="13">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="14"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="15"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="59"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys1"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellow" onclick="selectPlace(this.id)" id="ys">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="16">v</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="58">o</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys2"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green" onclick="selectPlace(this.id)" id="gh">0</div></td>
+        <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs5"></div></td>
+        <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs4"></div></td>
+        <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs3"></div></td>
+        <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs2"></div></td>
+        <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs1"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="17">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="57">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys3"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="18">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="56">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys4"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green" onclick="selectPlace(this.id)" id="gs">0</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="19">o</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="55">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys5"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="20"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="54">^</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellow" onclick="selectPlace(this.id)" id="yh">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="21"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="53"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty">S</div></td>
+        <td><div class="empty">O</div></td>
+        <td><div class="empty">R</div></td>
+        <td><div class="empty">R</div></td>
+        <td><div class="empty">Y</div></td>
+        <td><div class="empty">!</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="22"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="52"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="23"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="51"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blue" onclick="selectPlace(this.id)" id="bh">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="24">v</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="50"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs5"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="25">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="49">o</div></td>
+        <td><div class="red" onclick="selectPlace(this.id)" id="rs">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs4"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="26">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="48">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs3"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="27">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="47">|</div></td>
+        <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs1"></div></td>
+        <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs2"></div></td>
+        <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs3"></div></td>
+        <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs4"></div></td>
+        <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs5"></div></td>
+        <td><div class="red" onclick="selectPlace(this.id)" id="rh">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs2"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="28">o</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="46">^</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blue" onclick="selectPlace(this.id)" id="bs">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs1"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="29"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="45"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="44"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="43">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="42">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="41">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="40">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="39"><</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="38"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="37"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="36"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="35"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="34">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="33">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="32">-</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="31"><</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="30"></div></td>
+      </tr>
+    <table>
+    <h3>Click the spaces above to setup the board.</h3>
+    <div>
+      <p>It is <select id="currentPlayerSelect">
       <option value="Y">Yellow's</option>
       <option value="G">Green's</option>
       <option value="B">Blue's</option>
       <option value="R">Red's</option>
-  </select> turn playing the <select id="currentCardSelect">
+      </select> turn playing the <select id="currentCardSelect">
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -1111,12 +321,12 @@ function createEmptyBoard(id) {
       <option value="4">10</option>
       <option value="4">11</option>
       <option value="Sorry">Sorry</option>
-  </select> card. <br />
+      </select> card.</p><br />
+    </div>
+    <div id="metadata" style="display:none;"></div>
+    <div id="errors" style="color:red;"></div>
+    <div id="go"><button type="button" disabled onclick=\"analyzeBoard()\">Analyze</button></div>
   </div>
-  <div id="metadata" style="display:none;"></div>
-  <div id="errors" style="color:red;"></div>
-  <div id="go"><button type="button" disabled onclick=\"analyzeBoard()\">Analyze</button></div>
-</div>
 <hr />
 </center>
 <h3 id="results"></h3>

@@ -1,0 +1,243 @@
+div .resultBoard {
+  display:inline-block;
+}
+
+div .resultAnalysis {
+  padding-bottom: 100px;
+  display:inline-block;
+}
+
+div .resultLabel {
+  vertical-align: top; 
+  display:inline-block;
+}
+
+div .resultContainer {
+  width: 100%;
+}
+
+.board {
+  width: 500px;
+}
+td {
+  position: relative;
+}
+td:after {
+  content: '';
+  display: block;
+  margin-top: 100%;
+}
+td .emptySpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+td .yellowSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+td .greenSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+td .blueSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+td .redSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+td .yellowPiece {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: gold;
+  border: 1px solid black;
+  margin: 5px;
+}
+td .greenPiece {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: green;
+  border: 1px solid black;
+  margin: 5px;
+}
+td .bluePiece {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: blue;
+  border: 1px solid black;
+  margin: 5px;
+}
+td .redPiece {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: red;
+  border: 1px solid black;
+  margin: 5px;
+}
+
+td .yellow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: gold;
+  border: 1px solid black;
+  text-align:center;
+}
+td .green {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: green;
+  border: 1px solid black;
+  text-align:center;
+}
+td .red {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: red;
+  border: 1px solid black;
+  text-align:center;
+}
+td .blue {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: blue;
+  border: 1px solid black;
+  text-align:center;
+}
+td .yellowSafeSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid gold;
+}
+td .greenSafeSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid green;
+}
+td .redSafeSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid red;
+}
+td .blueSafeSpace {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid blue;
+}
+td .empty {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  text-align:center;
+}
+.shrink{
+-webkit-transform:scale(0.75);
+-moz-transform:scale(0.75);
+-ms-transform:scale(0.75);
+transform:scale(0.75);
+}
+
+.divTable{
+  display: table;
+  width: 100%;
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  border: 1px solid #999999;
+  display: table-cell;
+  padding: 3px 10px;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+}
