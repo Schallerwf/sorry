@@ -203,20 +203,24 @@ class Board:
     def totalDistance(self, player, playersPawns, weights={}):
         result = 0
         for pawn in playersPawns:
+            tmp = result
             if pawn == 'start':
                 result += weights.get('start', 0)
             elif pawn == 'home':
                 result += weights.get('home', 65)
             elif 'safe' in pawn:
-                result += weights.get('safe', 0)
+                result += weights.get('safe', 60)
                 result += int(pawn.split(':')[1])
             else:
-                result += (int(pawn.split(':')[1]) - PLAYER_OFFSETS[player]) % 60
+                spot = (int(pawn.split(':')[1]) - PLAYER_OFFSETS[player] - 2) % 60
+                if (spot == 0):
+                    spot = 60
+                result += spot
         return result
 
-    def totalDistances(self, pawns):
+    def totalDistances(self, pawns, weights={}):
         distances = {}
         for player in PLAYERS:
             playersPawns = pawns[player]
-            distances[player] = self.totalDistance(player, playersPawns)
+            distances[player] = self.totalDistance(player, playersPawns, weights)
         return distances

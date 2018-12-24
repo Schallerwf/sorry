@@ -517,6 +517,48 @@ class TestBoard(unittest.TestCase):
              B: ["start", "start", "start", "start"],},
             result)
 
+    def test_total_distances(self):
+        board = Board()
+        # board:3 = 1
+        # board:2 = 60
+        # board:1 = 59
+        # board:0 = 58
+        pawns = ({Y: ["board:0", "board:1", "board:2", "board:3"],
+                  G: ["start", "start", "start", "start"],
+                  R: ["start", "start", "start", "start"],
+                  B: ["start", "start", "start", "start"],})
+        self.assertEqual(
+            {Y: 178, G: 0, R: 0, B: 0},
+            board.totalDistances(pawns))
+
+        # Distance for each player should be the same.
+        # First pawn is in start, 0 distance
+        # Second pawn is just outside of start, 2 distance
+        # Third pawn is home, 65 distance
+        # Fourth pawn is one behind start, 1 distance
+        # Total = 0 + 2 + 65 + 1 = 68 
+        pawns = ({Y: ["start", "board:4", "home", "board:3"],
+                  G: ["start", "board:19", "home", "board:18"],
+                  R: ["start", "board:34", "home", "board:33"],
+                  B: ["start", "board:49", "home", "board:48"],})
+        self.assertEqual(
+            {Y: 68, G: 68, R: 68, B: 68},
+            board.totalDistances(pawns))
+
+        # Distance for each player should be the same.
+        # First pawn is in safe:1, 61 distance
+        # Second pawn is just outside of safe zone, 60 distance
+        # Third pawn is 15 spaces to the right of their start, 17 distance
+        # Fourth pawn is in safe:4, 64 distance
+        # Total = 61 + 60 + 17 + 0 = x 
+        pawns = ({Y: ["safe:1", "board:2",  "board:19", "safe:4"],
+                  G: ["safe:1", "board:17", "board:34", "safe:4"],
+                  R: ["safe:1", "board:32", "board:49", "safe:4"],
+                  B: ["safe:1", "board:47", "board:4",  "safe:4"],})
+        self.assertEqual(
+            {Y: 202, G: 202, R: 202, B: 202},
+            board.totalDistances(pawns))
+
 class TestGame(unittest.TestCase):
     def test_game_compute_states_sorry(self):
         game = Game()
