@@ -9,8 +9,8 @@ class Board:
         self.discardPile = []
         self.pawns = {Y: ["start", "start", "start", "start"],
                       G: ["start", "start", "start", "start"],
-                      R: ["start", "start", "start", "start"],
-                      B: ["start", "start", "start", "start"],}
+                      B: ["start", "start", "start", "start"],
+                      R: ["start", "start", "start", "start"],}
 
     def initDeck(self):
         deck = [1]
