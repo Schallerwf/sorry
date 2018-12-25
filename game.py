@@ -63,7 +63,7 @@ class Game:
         if ((card == 1 or card == 2) and numPawnsAtStart > 0):
             possibleStates.append(self.board.startPawn(player))
         
-        if (card == 'sorry' and numPawnsAtStart > 1):
+        if (card == 'sorry' and numPawnsAtStart > 0):
             for opponentPawn in opponentPawnsInPlay:
                 possibleStates.append(self.board.sorry(player, opponentPawn))
         
