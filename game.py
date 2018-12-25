@@ -10,7 +10,7 @@ class Game:
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:Strategy('Y'),G:'random',B:'random',R:'random'}
+        self.strategies = {Y:Strategy('Y'),G:Strategy('G'),B:Strategy('B'),R:Strategy('R')}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,B:0,R:0}
         self.lostTurns  = {Y:0,G:0,B:0,R:0}

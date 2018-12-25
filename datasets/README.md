@@ -1,8 +1,8 @@
-Each dataset consists of 10,000 simulated games. 8,000 for training, 2,000 for testing. The data is stored as a CSV where the first 16 values are the numarical positions of the pawns on the board, and the 17th value is the index of the winning player.
+Each dataset consists of 10,000 simulated games. 8,000 for training, 2,000 for testing. The data is stored as a CSV where the first 16 values are the numarical positions of the pawns on the board, and the 17th value is the index of the winning player (0,1,2 or 3).
 
 p0,p0,p0,p0,p1,p1,p1,p1,p2,p2,p2,p2,p3,p3,p3,p3,winner
 
-A pawn position is an integer between 0 and 66. 0 being safe, 1-60 being on the board, 60-65 being in the safe zone, and 66 being home.
+A pawn position is an integer between 0 and 66. 0 being safe, 1-60 being on the board, 61-65 being in the safe zone, and 66 being home.
 
 ## basic
 The games were played with each AI player using a basic selfish strategy

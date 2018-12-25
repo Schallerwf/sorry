@@ -30,7 +30,7 @@ def analyzeBoard(currentGameState, currentPlayer, currentCard):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--count', '-c', default=1, type=int, help='number of sorry games to simulate. defaults to 1')
-    parser.add_argument('--outputData', '-o', action='store_true', help='output game data as a csv')
+    parser.add_argument('--outputData', '-o', default=False, action='store_true', help='output game data as a csv')
 
     args = parser.parse_args()
     count = copy.deepcopy(args.count)
