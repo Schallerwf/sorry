@@ -20,14 +20,16 @@ class Board:
         random.shuffle(deck)
         return deck
 
-    def toArray(self):
+    def toArray(self, pawns=None):
+        if (pawns == None):
+            pawns = self.pawns
         result = []
         for player in PLAYERS:
-            playersPawns = self.pawns[player]
+            playersPawns = pawns[player]
             for pawn in playersPawns:
                 result.append(str(self.pawnToInt(pawn)))
         return result
-
+        
     def pawnToInt(self, pawn):
         if 'board' in pawn:
             return int(pawn.split(':')[1]) + 1
@@ -207,7 +209,7 @@ class Board:
             if pawn == 'start':
                 result += weights.get('start', 0)
             elif pawn == 'home':
-                result += weights.get('home', 65)
+                result += weights.get('home', 66)
             elif 'safe' in pawn:
                 result += weights.get('safe', 60)
                 result += int(pawn.split(':')[1])
@@ -224,3 +226,10 @@ class Board:
             playersPawns = pawns[player]
             distances[player] = self.totalDistance(player, playersPawns, weights)
         return distances
+
+    def rfScores(self, pawns, rfModel):
+        predictions = rfModel.predict_proba([self.toArray(pawns)])[0]
+        return {Y: predictions[0],
+                G: predictions[1],
+                R: predictions[2],
+                B: predictions[3],}

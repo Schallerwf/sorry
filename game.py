@@ -3,14 +3,14 @@ import random
 
 from board import Board
 from sorry_constants import *
-from strategy import Strategy
+from strategy import Strategy, SIMPLE, RANDOM_FOREST
 
 class Game:
-    def __init__(self):
+    def __init__(self, randomForestModel=None):
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:Strategy('Y'),G:Strategy('G'),B:Strategy('B'),R:Strategy('R')}
+        self.strategies = {Y:Strategy('Y', strategy=RANDOM_FOREST, randomForestModel=randomForestModel),G:Strategy('G'),B:Strategy('B'),R:Strategy('R')}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,B:0,R:0}
         self.lostTurns  = {Y:0,G:0,B:0,R:0}
@@ -27,9 +27,6 @@ class Game:
 
         if not possibleStates:
             return None
-
-        if strategy == 'random':
-            return random.choice(possibleStates)
 
         return strategy.chooseMove(possibleStates)
 

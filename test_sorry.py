@@ -534,15 +534,15 @@ class TestBoard(unittest.TestCase):
         # Distance for each player should be the same.
         # First pawn is in start, 0 distance
         # Second pawn is just outside of start, 2 distance
-        # Third pawn is home, 65 distance
+        # Third pawn is home, 66 distance
         # Fourth pawn is one behind start, 1 distance
-        # Total = 0 + 2 + 65 + 1 = 68 
+        # Total = 0 + 2 + 66 + 1 = 68 
         pawns = ({Y: ["start", "board:4", "home", "board:3"],
                   G: ["start", "board:19", "home", "board:18"],
                   B: ["start", "board:34", "home", "board:33"],
                   R: ["start", "board:49", "home", "board:48"],})
         self.assertEqual(
-            {Y: 68, G: 68, R: 68, B: 68},
+            {Y: 69, G: 69, R: 69, B: 69},
             board.totalDistances(pawns))
 
         # Distance for each player should be the same.

@@ -359,7 +359,7 @@ function updateUI() {
     for (var n = 0; n < globalGameState[player].length; n++) {
       var playersInvalidSpaces = INVALID_SPACES[player];
       for (var j = 0; j < playersInvalidSpaces.length; j++) {
-        if (playersInvalidSpaces[j] == parseInt(globalGameState[player][n].split(":")[1])) {
+        if (globalGameState[player][n].startsWith("board") && playersInvalidSpaces[j] == parseInt(globalGameState[player][n].split(":")[1])) { 
           errors += "Player " + color + " has a pawn on the start of an opponents slide.<br />";
         }
       }
@@ -500,6 +500,8 @@ function updateAnalysisResults(serverResults) {
 function createAnalysisTable(possibleMove, inputState) {
   var startingDistances = inputState["distances"];
   var distances = possibleMove["distances"];
+  var startingRFScores = inputState["rfScores"];
+  var rfScores = possibleMove["rfScores"];
   var result = "<div class='divTable' style='width: 30px;border: 1px solid #000;' >";
   result += "<div class='divTableBody'>";
   result += "<div class='divTableRow'>";
@@ -508,6 +510,13 @@ function createAnalysisTable(possibleMove, inputState) {
   result += "<div class='divTableCell'>Green</div>";
   result += "<div class='divTableCell'>Blue</div>";
   result += "<div class='divTableCell'>Red</div>";
+  result += "</div>";
+  result += "<div class='divTableRow'>";
+  result += "<div class='divTableCell'>rfScore</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "Y")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "G")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "B")+"</div>";
+  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "R")+"</div>";
   result += "</div>";
   result += "<div class='divTableRow'>";
   result += "<div class='divTableCell'>distances</div>";
@@ -521,15 +530,19 @@ function createAnalysisTable(possibleMove, inputState) {
   return result;
 }
 
+function scalingRound(num) {
+  return Math.round(num * 100) / 100
+}
+
 function distanceEntry(newDistances, startingDistances, player) {
-  var delta = newDistances[player] - startingDistances[player];
+  var delta = scalingRound(newDistances[player] - startingDistances[player]);
   var deltaString = "";
   if (delta > 0) {
     deltaString = "(+"+delta+")";
   } else if (delta < 0) {
     deltaString = "("+delta+")";
   }
-  return newDistances[player] + deltaString;
+  return scalingRound(newDistances[player]) + deltaString;
 }
 
 function setPawnOnBoard(boardId, pawnPosition, player) {

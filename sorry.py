@@ -1,6 +1,7 @@
 import argparse
 from collections import Counter
 import copy
+import pickle
 import sys
 import time
 
@@ -10,7 +11,7 @@ from sorry_constants import *
 from strategy import Strategy
 from util import *
 
-def analyzeBoard(currentGameState, currentPlayer, currentCard):
+def analyzeBoard(currentGameState, currentPlayer, currentCard, rfModel):
     currentGameState = capitalize_keys(currentGameState)
     currentCard = int(currentCard) if currentCard.isdigit() else currentCard
     game = Game()
@@ -20,9 +21,11 @@ def analyzeBoard(currentGameState, currentPlayer, currentCard):
     gameStates = []
     for possibleGameState in possibleGameStates:
         gameStates.append({'gameState': possibleGameState,
-                           'distances': game.board.totalDistances(possibleGameState)})
+                           'distances': game.board.totalDistances(possibleGameState),
+                           'rfScores':  game.board.rfScores(possibleGameState, rfModel)})
 
-    results = {'inputState': {'distances': game.board.totalDistances(currentGameState)},
+    results = {'inputState': {'distances': game.board.totalDistances(currentGameState),
+                              'rfScores':  game.board.rfScores(currentGameState, rfModel)},
                'possibleGameStates': gameStates}
 
     return results
@@ -31,9 +34,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--count', '-c', default=1, type=int, help='number of sorry games to simulate. defaults to 1')
     parser.add_argument('--outputData', '-o', default=False, action='store_true', help='output game data as a csv')
+    parser.add_argument('--progress', '-p', default=1000, type=int, help='output message everytime this many games have been simulated. defaults to 1000')
 
     args = parser.parse_args()
     count = copy.deepcopy(args.count)
+
+    rfModel = pickle.load(open('ml/models/basic.rf', 'rb'))
 
     totalTurns = 0
     totalSorrys = 0
@@ -42,7 +48,10 @@ def main():
 
     start = time.time()
     while count:
-        game = Game()
+        if (count % args.progress == 0):
+            print '{0} games simulated.'.format(args.count - count)
+
+        game = Game(randomForestModel=rfModel)
         while game.winner == None:
             game.playTurn()
         totalTurns += game.totalTurns
