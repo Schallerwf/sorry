@@ -471,15 +471,16 @@ function updateAnalysisResults(serverResults) {
   }
 
   var possibleMovesHtml = "";
+  possibleMovesHtml += createAnalysisTable(possibleMoves, inputGameState);
 
   if (numPossibleMoves > 0) {
     for (var i = 0; i < numPossibleMoves; i++) {
       possibleMovesHtml += "<hr />";
       possibleMovesHtml += "<div class=\"resultContainer\">";
-      possibleMovesHtml += "<div class=\"resultLabel\"><h3>Option "+(i+1)+"</h3></div>"
-      possibleMovesHtml += "<div class=\"resultBoard\">"+createEmptyBoard(i)+"</div>";
+      possibleMovesHtml += "<div class=\"resultLabel\"><h3 id=\"option"+(i+1)+"\">Option "+(i+1)+"</h3></div>"
+      possibleMovesHtml += "<center><div class=\"resultBoard\">"+createEmptyBoard(i)+"</div></center>";
       possibleMovesHtml += "<div class=\"resultAnalysis\">";
-      possibleMovesHtml += createAnalysisTable(possibleMoves[i], inputGameState);
+      possibleMovesHtml += createSingleMoveAnalysisTable(possibleMoves[i], inputGameState);
       possibleMovesHtml += "</div></div>";
     }
   }
@@ -497,7 +498,61 @@ function updateAnalysisResults(serverResults) {
   }
 }
 
-function createAnalysisTable(possibleMove, inputState) {
+function distanceEntry(newDistances, startingDistances, player) {
+  var delta = scalingRound(newDistances[player] - startingDistances[player]);
+  var deltaString = "";
+  var cellColor = "";
+  if (delta > 0) {
+    deltaString = "(+"+delta+")";
+    cellColor = "green";
+  } else if (delta < 0) {
+    deltaString = "("+delta+")";
+    cellColor = "red";
+  }
+  scalingRound(newDistances[player]) + deltaString;
+  return "<div class=\"divTableCell\" style=\"color:"+cellColor+";\">"+scalingRound(newDistances[player]) + deltaString+"</div>";
+}
+
+function createAnalysisTable(possibleMoves, inputState) {
+  var startingDistances = inputState["distances"];
+  var startingRFScores = inputState["rfScores"];
+  var result = "<div class='divTable' style='width: 30px;border: 1px solid #000;' >";
+  result += "<div class='divTableBody'>";
+  result += "<div class='divTableRow'>";
+  result += "<div class='divTableCell'>Score Type <a href=\"scoreTypes.html\">?</a></div>";
+  result += "<div class='divTableCell'>Option</div>";
+  result += "<div class='divTableCell'>Yellow</div>";
+  result += "<div class='divTableCell'>Green</div>";
+  result += "<div class='divTableCell'>Blue</div>";
+  result += "<div class='divTableCell'>Red</div>";
+  result += "</div>";
+  for (var idx = 0; idx < possibleMoves.length; idx++) {
+    possibleMove = possibleMoves[idx];
+    var distances = possibleMove["distances"];
+    var rfScores = possibleMove["rfScores"];
+    result += "<div class='divTableRow'>";
+    result += "<div class='divTableCell'>rfScore</div>";
+    result += "<div class='divTableCell'><a href=\"#option"+(idx+1)+"\">"+(idx+1)+"</a></div>";
+    result += distanceEntry(rfScores, startingRFScores, "Y");
+    result += distanceEntry(rfScores, startingRFScores, "G");
+    result += distanceEntry(rfScores, startingRFScores, "B");
+    result += distanceEntry(rfScores, startingRFScores, "R");
+    result += "</div>";
+    result += "<div class='divTableRow'>";
+    result += "<div class='divTableCell'>distances</div>";
+    result += "<div class='divTableCell'><a href=\"#option"+(idx+1)+"\">"+(idx+1)+"</a></div>";
+    result += distanceEntry(distances, startingDistances, "Y")
+    result += distanceEntry(distances, startingDistances, "G")
+    result += distanceEntry(distances, startingDistances, "B")
+    result += distanceEntry(distances, startingDistances, "R")
+    result += "</div>";
+  }
+  result += "</div>";
+  result += "</div>";
+  return result;
+}
+
+function createSingleMoveAnalysisTable(possibleMove, inputState) {
   var startingDistances = inputState["distances"];
   var distances = possibleMove["distances"];
   var startingRFScores = inputState["rfScores"];
@@ -513,17 +568,17 @@ function createAnalysisTable(possibleMove, inputState) {
   result += "</div>";
   result += "<div class='divTableRow'>";
   result += "<div class='divTableCell'>rfScore</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "Y")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "G")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "B")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(rfScores, startingRFScores, "R")+"</div>";
+  result += distanceEntry(rfScores, startingRFScores, "Y");
+  result += distanceEntry(rfScores, startingRFScores, "G");
+  result += distanceEntry(rfScores, startingRFScores, "B");
+  result += distanceEntry(rfScores, startingRFScores, "R");
   result += "</div>";
   result += "<div class='divTableRow'>";
   result += "<div class='divTableCell'>distances</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "Y")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "G")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "B")+"</div>";
-  result += "<div class='divTableCell'>"+distanceEntry(distances, startingDistances, "R")+"</div>";
+  result += distanceEntry(distances, startingDistances, "Y");
+  result += distanceEntry(distances, startingDistances, "G");
+  result += distanceEntry(distances, startingDistances, "B");
+  result += distanceEntry(distances, startingDistances, "R");
   result += "</div>";
   result += "</div>";
   result += "</div>";
@@ -532,17 +587,6 @@ function createAnalysisTable(possibleMove, inputState) {
 
 function scalingRound(num) {
   return Math.round(num * 100) / 100
-}
-
-function distanceEntry(newDistances, startingDistances, player) {
-  var delta = scalingRound(newDistances[player] - startingDistances[player]);
-  var deltaString = "";
-  if (delta > 0) {
-    deltaString = "(+"+delta+")";
-  } else if (delta < 0) {
-    deltaString = "("+delta+")";
-  }
-  return scalingRound(newDistances[player]) + deltaString;
 }
 
 function setPawnOnBoard(boardId, pawnPosition, player) {
