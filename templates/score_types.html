@@ -3,37 +3,38 @@
   <title>Ultimate Sorry</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/sorry.css') }}">
-  <script src="{{ url_for('static',filename='js/sorry.js') }}"></script>
 </head>
 <body>
-  <center>
-  <div id="setup">
+  <div id="setup" style="width:60%;margin:auto;">
+    <center>
     <h1>Ultimate Sorry</h1>
-    <a href="about.html">about</a>
-    <br /><br />
-    <table class="board">
+    </center>
+    <a href="/">Back to Home</a>
+    <p>Ultimate Sorry uses two different ways to determine the 'score' for a player.</p>
+    <p><strong>1. Distance</strong><br />The distance score works how you might expect. A player's score is the sum of each of it's pawns distance towards home. Pawns in 'Start' are worth zero points. Pawns in 'Home' are worth 66. All spots in between are incremental. See the board below for the distance score of each position for the Yellow player.</p>
+    <table class="board shrink">
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="0"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="1">></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="2">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="3">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="4">o</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="5"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="6"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="7"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="8"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="9">></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="10">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="11">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="12">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="13">o</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="14"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="15"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="0">58</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="1">59</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="2">60</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="3">1</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="4">2</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="5">3</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="6">4</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="7">5</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="8">6</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="9">7</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="10">8</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="11">9</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="12">10</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="13">11</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="14">12</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="15">13</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="59"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="59">57</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys1"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys1">61</div></td>
         <td><div class="empty"></div></td>
         <td><div class="yellow" onclick="selectPlace(this.id)" id="ys">0</div></td>
         <td><div class="empty"></div></td>
@@ -46,32 +47,30 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="16">v</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="16">14</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="58">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="58">56</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys2"></div></td>
-        <td><div class="empty"></div></td>
-        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys2">62</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="green" onclick="selectPlace(this.id)" id="gh">0</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green" onclick="selectPlace(this.id)" id="gh"></div></td>
         <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs5"></div></td>
         <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs4"></div></td>
         <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs3"></div></td>
         <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs2"></div></td>
         <td><div class="greenSafeSpace" onclick="selectPlace(this.id)" id="gs1"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="17">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="17">15</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="57">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="57">55</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys3"></div></td>
-        <td><div class="empty"></div></td>
-        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys3">63</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -82,14 +81,14 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="18">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="18">16</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="56">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="56">54</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys4"></div></td>
-        <td><div class="empty"></div></td>
-        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys4">64</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -99,15 +98,15 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="green" onclick="selectPlace(this.id)" id="gs">0</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="19">o</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green" onclick="selectPlace(this.id)" id="gs"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="19">17</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="55">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="55">53</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys5"></div></td>
-        <td><div class="empty"></div></td>
-        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace" onclick="selectPlace(this.id)" id="ys5">65</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -118,14 +117,14 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="20"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="20">18</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="54">^</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="54">52</div></td>
         <td><div class="empty"></div></td>
-        <td><div class="yellow" onclick="selectPlace(this.id)" id="yh">0</div></td>
-        <td><div class="empty"></div></td>
-        <td><div class="empty"></div></td>
+        <td><div class="yellow" onclick="selectPlace(this.id)" id="yh">66</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -136,10 +135,12 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="21"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="21">19</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="53"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="53">51</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -154,10 +155,10 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="22"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="22">20</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="52"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="52">50</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -172,10 +173,10 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="23"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="23">21</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="51"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="51">49</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -188,12 +189,12 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="blue" onclick="selectPlace(this.id)" id="bh">0</div></td>
+        <td><div class="blue" onclick="selectPlace(this.id)" id="bh"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="24">v</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="24">22</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="50"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="50">48</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -208,11 +209,11 @@
         <td><div class="empty"></div></td>
         <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs5"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="25">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="25">23</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="49">o</div></td>
-        <td><div class="red" onclick="selectPlace(this.id)" id="rs">0</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="49">47</div></td>
+        <td><div class="red" onclick="selectPlace(this.id)" id="rs"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -226,10 +227,10 @@
         <td><div class="empty"></div></td>
         <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs4"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="26">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="26">24</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="48">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="48">46</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -244,16 +245,16 @@
         <td><div class="empty"></div></td>
         <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs3"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="27">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="27">25</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="47">|</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="47">45</div></td>
         <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs1"></div></td>
         <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs2"></div></td>
         <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs3"></div></td>
         <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs4"></div></td>
         <td><div class="redSafeSpace" onclick="selectPlace(this.id)" id="rs5"></div></td>
-        <td><div class="red" onclick="selectPlace(this.id)" id="rh">0</div></td>
+        <td><div class="red" onclick="selectPlace(this.id)" id="rh"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -262,10 +263,10 @@
         <td><div class="empty"></div></td>
         <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs2"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="28">o</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="28">26</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="46">^</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="46">44</div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
@@ -276,60 +277,32 @@
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="blue" onclick="selectPlace(this.id)" id="bs">0</div></td>
+        <td><div class="blue" onclick="selectPlace(this.id)" id="bs"></div></td>
         <td><div class="empty"></div></td>
         <td><div class="blueSafeSpace" onclick="selectPlace(this.id)" id="bs1"></div></td>
         <td><div class="empty"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="29"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="29">27</div></td>
       </tr>
       <tr>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="45"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="44"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="43">o</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="42">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="41">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="40">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="39"><</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="38"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="37"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="36"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="35"></div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="34">o</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="33">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="32">-</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="31"><</div></td>
-        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="30"></div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="45">43</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="44">43</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="43">41</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="42">40</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="41">39</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="40">38</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="39">37</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="38">36</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="37">35</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="36">34</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="35">33</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="34">32</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="33">31</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="32">30</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="31">29</div></td>
+        <td><div class="emptySpace" onclick="selectPlace(this.id)" id="30">28</div></td>
       </tr>
     <table>
-    <h3>Click the spaces above to setup the board.</h3>
-    <div>
-      <p>It is <select id="currentPlayerSelect">
-      <option value="Y">Yellow's</option>
-      <option value="G">Green's</option>
-      <option value="B">Blue's</option>
-      <option value="R">Red's</option>
-      </select> turn playing the <select id="currentCardSelect">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">4</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="Sorry">Sorry</option>
-      </select> card.</p><br />
-    </div>
-    <div id="metadata" style="display:none;"></div>
-    <div id="errors" style="color:red;"></div>
-    <div id="go"><button type="button" disabled onclick=\"analyzeBoard()\">Analyze</button></div>
+        <p><strong>1. rfScore</strong><br />rfScore is short for 'Random Forest Score'. A random forest is a simple machine learning alrgorithm that has looked at hundreds of thousands of Sorry games and attempts to predict which player will win. Each player is given a score between 0.0 and 1.0, where the closer to 1.0 the more likely the player will win. This algorithm will sometimes identify moves that are create a better board for a player even if the distance is not optimal.</p>
   </div>
-<hr />
-</center>
-<h3 id="results"></h3>
-<div id="possibleStates">
-</div>
 </body>
 </html>

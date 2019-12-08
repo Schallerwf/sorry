@@ -19,5 +19,13 @@ def view():
     else:
         return render_template('setup_board.html')
 
+@app.route('/scoreTypes.html', methods=['GET'])
+def scoreTypes():
+    return render_template('score_types.html')
+
+@app.route('/about.html', methods=['GET'])
+def about():
+    return render_template('about.html')
+
 if __name__ == '__main__':
     app.run()
