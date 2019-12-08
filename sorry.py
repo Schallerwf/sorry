@@ -73,6 +73,8 @@ def main():
     if args.count > 1 and not args.outputData:
         print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} ({4}) turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count, totalLostTurns/args.count)
         print 'Wins: ' + str(wins)
+        for p in ['Y', 'G', 'B', 'R']:
+            print p + ': ' + str((float(wins[p])/args.count)*100) + '%'
 
 if __name__ == "__main__":
     main()

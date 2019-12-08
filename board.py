@@ -13,7 +13,7 @@ class Board:
                       R: ["start", "start", "start", "start"],}
 
     def initDeck(self):
-        deck = [1]
+        deck = []
         for card in CARDS:
             for x in range(4):
                 deck.append(card)
