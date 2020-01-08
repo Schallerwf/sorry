@@ -64,8 +64,8 @@ class Game:
             for opponentPawn in opponentPawnsInPlay:
                 possibleStates.append(self.board.sorry(player, opponentPawn))
         
-        if (pawnsInPlay > 0):
-            if (card == 7 and pawnsInPlay > 1):
+        if (len(pawnsInPlay) > 0):
+            if (card == 7 and len(pawnsInPlay) > 1):
                 possibleCombinations = itertools.combinations(pawnsInPlay, 2)
                 for pawnCombination in possibleCombinations:
                     for possibleSplit in POSSIBLE_SEVEN_SPLITS:

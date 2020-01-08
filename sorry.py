@@ -49,7 +49,7 @@ def main():
     start = time.time()
     while count:
         if (count % args.progress == 0):
-            print '{0} games simulated.'.format(args.count - count)
+            print('{0} games simulated.'.format(args.count - count))
 
         game = Game(randomForestModel=rfModel)
         while game.winner == None:
@@ -60,21 +60,21 @@ def main():
         wins[game.winner] += 1
 
         if (args.count < 10 and not args.outputData):
-            print 'Game Over! {} wins in {} ({}) turns!'.format(game.winner, game.totalTurns, game.totalTurns - sum(game.lostTurns.values())) 
-            print game.board.pawns
-            print 'Sorry! There were {} total \'Sorry\'s\'. {}'.format(sum(game.sorryCount.values()), game.sorryCount)
-            print '{} total turns were skipped because there was not a valid move. {}'.format(sum(game.lostTurns.values()), game.lostTurns)
+            print('Game Over! {} wins in {} ({}) turns!'.format(game.winner, game.totalTurns, game.totalTurns - sum(game.lostTurns.values()))) 
+            print(game.board.pawns)
+            print('Sorry! There were {} total \'Sorry\'s\'. {}'.format(sum(game.sorryCount.values()), game.sorryCount))
+            print('{} total turns were skipped because there was not a valid move. {}'.format(sum(game.lostTurns.values()), game.lostTurns))
         count -= 1
 
         if args.outputData:
             for state in game.states:
-                print state + ',' + str(game.winnerToInt())
+                print(state + ',' + str(game.winnerToInt()))
     end = time.time()
     if args.count > 1 and not args.outputData:
-        print 'Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} ({4}) turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count, totalLostTurns/args.count)
-        print 'Wins: ' + str(wins)
+        print('Simulated {0} total games in {1:.2f} milliseconds. On average there were {2} ({4}) turns and {3} \'Sorry\'s\' per game.'.format(args.count, end-start, totalTurns/args.count, totalSorrys/args.count, totalLostTurns/args.count))
+        print('Wins: ' + str(wins))
         for p in ['Y', 'G', 'B', 'R']:
-            print p + ': ' + str((float(wins[p])/args.count)*100) + '%'
+            print(p + ': ' + str((float(wins[p])/args.count)*100) + '%')
 
 if __name__ == "__main__":
     main()

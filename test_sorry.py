@@ -686,8 +686,9 @@ class TestGame(unittest.TestCase):
         for item in expectedMutations:
             item.update({G:threeActivePawns[G],R:threeActivePawns[R],B:threeActivePawns[B]})
 
-        self.assertEqual(sorted(expectedMutations),
-                         sorted(result))
+        # assertCountEqual actually asserts all elements are equals, not just that number of elements is the same
+        self.assertCountEqual(expectedMutations,
+                         result)
 
     def test_game_compute_states_4(self):
         game = Game()

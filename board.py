@@ -196,7 +196,7 @@ class Board:
         return result
 
     def pawnAtLocation(self, pawns, targetLocation):
-        for player, locations in pawns.iteritems():
+        for player, locations in pawns.items():
             for location in locations:
                 if targetLocation == location:
                     return player

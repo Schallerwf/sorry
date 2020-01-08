@@ -13,30 +13,30 @@ header = ['p1_1', 'p1_2', 'p1_3', 'p1_4',
           'winner']
 
 def train(trainingData):
-    print 'Loading Training Dataset {0}'.format(trainingData)
+    print('Loading Training Dataset {0}'.format(trainingData))
     df = pd.read_csv(trainingData, names=header)
     gameStates = df.iloc[:, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]].values
     winners = df.iloc[:, -1].values
 
-    print 'Training RF' 
+    print('Training RF')
     clf = RandomForestClassifier(n_jobs=2, max_depth=10)
     clf.fit(gameStates, winners)
 
-    print 'Feature Importances'
-    print clf.feature_importances_
+    print('Feature Importances')
+    print(clf.feature_importances_)
     return clf
 
 def test(clf, testingData):
-    print 'Loading Testing Dataset {0}'.format(testingData)
+    print('Loading Testing Dataset {0}'.format(testingData))
     df = pd.read_csv(testingData, names=header)
     gameStates = df.iloc[:, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]].values
     winners = df.iloc[:, -1].values
 
-    print 'Evaluating RF' 
-    print clf.score(gameStates, winners)
+    print('Evaluating RF')
+    print(clf.score(gameStates, winners))
 
 def save(clf, modelPath):
-    print 'Saving Model to {0}'.format(modelPath)
+    print('Saving Model to {0}'.format(modelPath))
     pickle.dump(clf, open(modelPath, 'wb'))
 
 def main():
