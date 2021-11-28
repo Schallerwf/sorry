@@ -10,9 +10,388 @@
     <h1>About Ultimate Sorry</h1>
     </center>
     <a href="/">Back to Home</a>
-    <h2>Making of Ultimate Sorry</h2>
-    <p>Sorry is a fantastic board game. Over the years it has become my go to game for friend and family gatherings. I often wondered how much of Sorry was luck vs skill. I built a Sorry simulator in python that can play thousands of games in a few milliseconds. The program can test various stategies, rule changes, and view the impact on the game. Then I built a web server to allow a single board position to be analyzed. If you are ever wondering what might be the best move in a Sorry game the move analyzer will help (or confuse) you.</p>
-    <p>You can provide feedback or see my other projects on my website <a href="https://www.williamschaller.com">WilliamSchaller.com</a></p>
+    <h2>Ultimate Sorry</h2>
+    <p>Sorry is a great board game. Over the years it has become my go to game for friend and family gatherings. Everyone loves dropping a sarcastic "I'm sorry" and bumping your opponent all the way back to the start.</p><p>When playing with my in-laws there is often great debate on what moves are 'optimal' and social factors such as alliances, revenge, or just a desire to stir the pot  seem to often decide the winner. I built a Sorry simulator in python that can play thousands of games in a few milliseconds. I explore some of my discoveries below.</p>
+    <p>I also built a web server to allow a single board position to be analyzed, showing all the possible moves and how each one impacts each player. If you are ever wondering what might be the best move in a Sorry game the move analyzer will help (or confuse) you.</p>
+    <p>Check out my other projects on my website, <a href="https://www.williamschaller.com">WilliamSchaller.com</a>, or check out the code for this project <a href="https://github.com/Schallerwf/sorry">on github</a>.</p>
+    <p>Some implementation notes: The sorry board state can be captured with a deck and a 4x4 array indicating the position of each of the pawns. During testing, I found it is possible for a player to knock out one of their own pawns by using an 11 card to swap with another pawn that will then slide into the original pawn.</p>
+    <hr />
+    <h3>Sorry!</h3>
+    <p>
+      By simulating thousands of sorry games in a few seconds we can answer some interesting questions.
+    </p>
+    <ul>
+      <li>How much of the game is skill vs luck?</li>
+      <li>How much can an alliance impact the game?</li>
+      <li>How many turns in Sorry are not valid?</li>
+      <li>Which spots are the most dangerous?</li>
+    </ul>
+    <p>
+      <strong>How much of the game is skill vs luck?</strong><br />
+      To test this we can simulate 100,000 games of Sorry where 3 of the players make random moves. The 4th player uses a simple strategy, chose the move that gets their pawns closest to their home. Out of 100,000 games the 4th player will win 63% of the time, while each of the random strategy players will win 11 to 13% of the time.
+    </p>
+    <p><strong>How much can an alliance impact the game?</strong><br />
+    To test this we can simulate games and tell the AI players which players they should try to make win. If we tell all 4 players to make Blue winning their top priority then blue will win 97% of the time! Meanwhile, if all players (including Blue) make Blue losing their top priority then Blue will only win 0.06% of the time. If Blue fights back against the other 3 they can bring their odds all the way up to 20%.</p>
+    <p>What if you are trying to lose but all 3 other players want you to win? In that case, you will win 50% of games even though you are trying to lose. If 3 players are playing to make themselves win, but one player has a grudge and decides to make it their priority to make Blue lose, then Blue's win chances drop from 25% to 13%. <strong>Essentially, grudges and alliances can have a massive impact on the game.</strong></p>
+    <p><strong>How many turns in Sorry are not valid?</strong><br />
+    On average, a Sorry game takes 180 turns until someone wins and 60 of those turns are skipped because there is not a legal move. There are around 15 Sorry cards used per game.</p>
+    <p><strong>Which spots are the most dangerous?</strong><br/>
+    While playing it seemed that sitting just outside another players start zone is a risky move. Just how risky is it? To understand this, I simulated 100,000 games and captured which spots results in the most pawns being knocked back home from Sorrys, slides, or direct landings. The data is extremely clear here.</p>
+    <p>40% of all pawn knock backs occur on the 4 spots just outside of the player's homes. The next most dangerous spots are located on the slides where each spot is responsible for 2% of knockbacks. <strong>The spots outside of home are over 5 times more dangerous than other spots!</strong> The safest spots are just before your own slides, because other players are less likely to sorry you as they won't be able to slide directly on that turn.</p><p>The spot outside of home is dangerous because:<br />1) a pawn can be knocked off by a player getting a 1 or 2, and coming out of home.<br />2) it's at the end of a slide<br />From there, the numbers are skewed because just outside of home is the most likely spot for a pawn to be! So scenarios #1 and #2 are more likely to occur, plus at the start of the game Sorry cards will be used on pawns in this location. This data did not change if I changed the strategy the players used. <br /><center><strong>My data is biased. It's skewed by the spots a pawn is most likely to be on in the first place. I need to come back and factor this in to correctly compute which spots on the board or more dangerous than others.</strong></center><br /> Below is a board where the more red the spot, the more knockbacks occur per game.</p>
+    <table class="board">
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(40.4733488146028,0,0,0.5);'
+ id="0"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(5.02646216989793,0,0,0.5);'
+ id="1">></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(24.5126100340228,0,0,0.5);'
+ id="2">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(0.371820489280121,0,0,0.5);'
+ id="3">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(255,0,0,0.5);'
+ id="4">o</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(7.9872549549063,0,0,0.5);'
+ id="5"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(2.27223632337852,0,0,0.5);'
+ id="6"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(15.1895555435546,0,0,0.5);'
+ id="7"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(2.01058486795917,0,0,0.5);'
+ id="8"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(0.771183237025436,0,0,0.5);'
+ id="9">></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(13.6334179402711,0,0,0.5);'
+ id="10">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(18.935302694821,0,0,0.5);'
+ id="11">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(21.772155316736,0,0,0.5);'
+ id="12">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(47.0834908462494,0,0,0.5);'
+ id="13">o</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(28.2583571852892,0,0,0.5);'
+ id="14"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(40.8727115623481,0,0,0.5);'
+ id="15"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(25.4352756926068,0,0,0.5);'
+ id="59"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace"  id="ys1"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellow"  id="ys"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(3.47032456661446,0,0,0.5);'
+ id="16">v</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(50.0305125020252,0,0,0.5);'
+ id="58">o</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace"  id="ys2"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green"  id="gh"></div></td>
+        <td><div class="greenSafeSpace"  id="gs5"></div></td>
+        <td><div class="greenSafeSpace"  id="gs4"></div></td>
+        <td><div class="greenSafeSpace"  id="gs3"></div></td>
+        <td><div class="greenSafeSpace"  id="gs2"></div></td>
+        <td><div class="greenSafeSpace"  id="gs1"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(24.3198142247664,0,0,0.5);'
+ id="17">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(22.2266025814117,0,0,0.5);'
+ id="57">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace"  id="ys3"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(1.77647567100502,0,0,0.5);'
+ id="18">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(15.5476049036021,0,0,0.5);'
+ id="56">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace"  id="ys4"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="green"  id="gs"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(253.650429335205,0,0,0.5);'
+ id="19">o</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(12.6694388939893,0,0,0.5);'
+ id="55">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellowSafeSpace"  id="ys5"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(7.76691688718475,0,0,0.5);'
+ id="20"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(0,0,0,0.5);'
+ id="54">^</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="yellow"  id="yh"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(2.01058486795917,0,0,0.5);'
+ id="21"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(1.62499324944645,0,0,0.5);'
+ id="53"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty">S</div></td>
+        <td><div class="empty">O</div></td>
+        <td><div class="empty">R</div></td>
+        <td><div class="empty">R</div></td>
+        <td><div class="empty">Y</div></td>
+        <td><div class="empty">!</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(15.8367986174866,0,0,0.5);'
+ id="22"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(14.4321434357617,0,0,0.5);'
+ id="52"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(1.32202840632932,0,0,0.5);'
+ id="23"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(3.37392666198628,0,0,0.5);'
+ id="51"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blue"  id="bh"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(0.23410919695415,0,0,0.5);'
+ id="24">v</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(7.00950477939191,0,0,0.5);'
+ id="50"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace"  id="bs5"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(12.5317276016633,0,0,0.5);'
+ id="25">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(246.875033752768,0,0,0.5);'
+ id="49">o</div></td>
+        <td><div class="red"  id="rs"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace"  id="bs4"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(17.9713236485392,0,0,0.5);'
+ id="26">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(1.23940163093374,0,0,0.5);'
+ id="48">|</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace"  id="bs3"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(23.7689690554625,0,0,0.5);'
+ id="27">|</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(23.5348598585084,0,0,0.5);'
+ id="47">|</div></td>
+        <td><div class="redSafeSpace"  id="rs1"></div></td>
+        <td><div class="redSafeSpace"  id="rs2"></div></td>
+        <td><div class="redSafeSpace"  id="rs3"></div></td>
+        <td><div class="redSafeSpace"  id="rs4"></div></td>
+        <td><div class="redSafeSpace"  id="rs5"></div></td>
+        <td><div class="red"  id="rh"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace"  id="bs2"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(50.2095371820489,0,0,0.5);'
+ id="28">o</div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(2.31354971107631,0,0,0.5);'
+ id="46">^</div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blue"  id="bs"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="blueSafeSpace"  id="bs1"></div></td>
+        <td><div class="empty"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(27.3219203974726,0,0,0.5);'
+ id="29"></div></td>
+      </tr>
+      <tr>
+        <td><div class="emptySpace" style='background-color:rgba(41.1343630177675,0,0,0.5);'
+ id="45"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(26.2753145757952,0,0,0.5);'
+ id="44"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(50.0580547604904,0,0,0.5);'
+ id="43">o</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(23.9479937354863,0,0,0.5);'
+ id="42">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(16.5115839498839,0,0,0.5);'
+ id="41">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(12.4215585678026,0,0,0.5);'
+ id="40">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(0.509531781606092,0,0,0.5);'
+ id="39"><</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(1.99681373872658,0,0,0.5);'
+ id="38"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(14.5285413403899,0,0,0.5);'
+ id="37"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(2.86439488038019,0,0,0.5);'
+ id="36"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(7.46395204406761,0,0,0.5);'
+ id="35"></div></td>
+        <td><div class="emptySpace" style='background-color:rgba(252.865474968947,0,0,0.5);'
+ id="34">o</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(0.977750175514392,0,0,0.5);'
+ id="33">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(24.4437543878598,0,0,0.5);'
+ id="32">-</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(3.60803585894043,0,0,0.5);'
+ id="31"><</div></td>
+        <td><div class="emptySpace" style='background-color:rgba(42.0432575471189,0,0,0.5);'
+ id="30"></div></td>
+      </tr>
+    <table>
+      <br />
+      <p>Thank you for reading.</p>
+    <br /><br /><br /><br /><br /><br /><br />
+
 </div>
 </body>
 </html>

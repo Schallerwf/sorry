@@ -10,10 +10,11 @@ class Game:
         self.board = Board()
         self.currentPlayerIndex = 0
         self.winner = None
-        self.strategies = {Y:Strategy('Y'),G:Strategy('G'),B:Strategy('B'),R:Strategy('R')}
+        self.strategies = {Y:Strategy('Y',strategy="random"),G:Strategy('G',strategy="random"),B:Strategy('B',strategy="random"),R:Strategy('R',strategy="random")}
         self.totalTurns = 0
         self.sorryCount = {Y:0,G:0,B:0,R:0}
         self.lostTurns  = {Y:0,G:0,B:0,R:0}
+        self.killedPawnSpots = {}
         self.states = []
 
     def winnerToInt(self):
@@ -30,6 +31,18 @@ class Game:
 
         return strategy.chooseMove(possibleStates)
 
+    def recordKilledPawns(self, move):
+        killedPawnsLocations = [] # It is possible to kill multiple pawns in one move using a slide
+        for player in PLAYERS:
+            for x in range(0,4):
+                if move[player][x] == "start" and self.board.pawns[player][x] != "start":
+                    killedPawnsLocations.append(self.board.pawns[player][x])
+        for location in killedPawnsLocations:
+            if location in self.killedPawnSpots:
+                self.killedPawnSpots[location] += 1
+            else:
+                self.killedPawnSpots[location] = 1
+
     def playTurn(self):
         card = self.board.drawCard();
         currentPlayer = PLAYERS[self.currentPlayerIndex]
@@ -37,6 +50,7 @@ class Game:
         move = self.chooseMove(currentPlayer, possibleGameStates)
 
         if move:
+            self.recordKilledPawns(move)
             self.setPawns(move)
             if card == 'sorry':
                 self.sorryCount[currentPlayer] += 1

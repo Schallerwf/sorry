@@ -45,6 +45,7 @@ def main():
     totalSorrys = 0
     totalLostTurns = 0
     wins = {Y:0,G:0,R:0,B:0}
+    killedSpots = {}
 
     start = time.time()
     while count:
@@ -58,6 +59,12 @@ def main():
         totalSorrys += sum(game.sorryCount.values())
         totalLostTurns += sum(game.lostTurns.values())
         wins[game.winner] += 1
+
+        for location in game.killedPawnSpots.keys():
+            if location in killedSpots:
+                killedSpots[location] += game.killedPawnSpots[location]
+            else:
+                killedSpots[location] = game.killedPawnSpots[location]
 
         if (args.count < 10 and not args.outputData):
             print('Game Over! {} wins in {} ({}) turns!'.format(game.winner, game.totalTurns, game.totalTurns - sum(game.lostTurns.values()))) 
@@ -75,6 +82,9 @@ def main():
         print('Wins: ' + str(wins))
         for p in ['Y', 'G', 'B', 'R']:
             print(p + ': ' + str((float(wins[p])/args.count)*100) + '%')
+
+        for location in killedSpots.keys():
+            print('{},{}'.format(location, killedSpots[location]))
 
 if __name__ == "__main__":
     main()
